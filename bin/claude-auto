@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+# Developed by Mohammad Rameez Imdad (Rameez Scripts)
+# WhatsApp: https://wa.me/923435347417 (For Custom Projects)
+# YouTube: https://www.youtube.com/@rameezimdad (Subscribe for more!)
+# claude-auto: Claude Code across several accounts. Usage limit hit -> the same
+# session resumes on the next account that still has usage left.
+HOME_DIR="${CLAUDE_AUTO_HOME:-$HOME/.local/share/claude-auto}"
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/claude-auto/accounts"
+USAGE="$HOME_DIR/lib/usage.py"
+MAIN="$HOME/.claude"
+MAX=${CLAUDE_AUTO_MAX:-95}   # % used = treat as full
+SHARE=(projects settings.json CLAUDE.md skills plugins agents commands hooks output-styles)
+
+accts() { [ -f "$CONF" ] && sed -e 's/#.*//' -e "s|^~|$HOME|" -e '/^\s*$/d' "$CONF" || echo "$MAIN"; }
+name() { [ "$1" = "$MAIN" ] && echo "account 1 (~/.claude)" || echo "${1/#$HOME/\~}"; }
+usage() { python3 "$USAGE" "$1"; }
+
+cmd_status() {
+  local a pct reset
+  for a in $(accts); do
+    read -r pct reset < <(usage "$a")
+    case "$pct" in
+      NOLOGIN) printf '%-32s not logged in\n' "$(name "$a")" ;;
+      UNKNOWN) printf '%-32s usage unknown (token expired or offline)\n' "$(name "$a")" ;;
+      *) printf '%-32s %3s%% used%s\n' "$(name "$a")" "$pct" \
+           "$([ "$reset" -gt 0 ] && echo ", resets $(python3 -c "import time;print(time.strftime('%a %H:%M',time.localtime($reset)))")")" ;;
+    esac
+  done
+}
+
+cmd_add() {
+  local n=$1 dir f
+  [[ "$n" =~ ^[0-9]+$ ]] || { echo "usage: claude-auto add <number>   e.g. claude-auto add 2" >&2; exit 1; }
+  dir="$HOME/.claude-$n"
+  mkdir -p "$dir" "$MAIN"
+  # share history, settings, skills with the main account so a session can move
+  for f in "${SHARE[@]}"; do
+    [ -e "$MAIN/$f" ] || [ "$f" = projects ] || continue
+    [ "$f" = projects ] && mkdir -p "$MAIN/projects"
+    [ -e "$dir/$f" ] && [ ! -L "$dir/$f" ] && { echo "  keeping existing $dir/$f (not shared)"; continue; }
+    ln -sfn "$MAIN/$f" "$dir/$f"
+  done
+  mkdir -p "$(dirname "$CONF")"; touch "$CONF"
+  grep -qxF "$dir" "$CONF" || echo "$dir" >> "$CONF"
+  echo "Account folder ready: $dir"
+  echo "Log it in once:  CLAUDE_CONFIG_DIR=$dir claude   then type /login"
+}
+
+# first account with room, skipping $1. sets PICK and WAIT_UNTIL (epoch)
+pick() {
+  PICK=; WAIT_UNTIL=0; local a pct reset maybe=
+  for a in $(accts); do
+    [ "$a" = "$1" ] && continue
+    read -r pct reset < <(usage "$a")
+    case "$pct" in
+      NOLOGIN) echo "  $(name "$a"): not logged in, skipped" >&2 ;;
+      UNKNOWN) echo "  $(name "$a"): usage unknown" >&2; maybe=${maybe:-$a} ;;
+      *) echo "  $(name "$a"): ${pct}% used" >&2
+         [ "$pct" -lt "$MAX" ] && { PICK=$a; return; }
+         [ "$reset" -gt 0 ] && { [ "$WAIT_UNTIL" -eq 0 ] || [ "$reset" -lt "$WAIT_UNTIL" ]; } && WAIT_UNTIL=$reset ;;
+    esac
+  done
+  PICK=$maybe   # expired token: claude refreshes it on start
+}
+
+# copy the transcript when the next account does not share projects/
+carry() {
+  local from=$1 to=$2 sid=$3 src
+  [ "$(cd "$from/projects" 2>/dev/null && pwd -P)" = "$(cd "$to/projects" 2>/dev/null && pwd -P)" ] && return
+  src=$(find "$from/projects" -name "$sid.jsonl" 2>/dev/null | head -1)
+  [ -n "$src" ] || return
+  mkdir -p "$to/projects/$(basename "$(dirname "$src")")"
+  cp "$src" "$to/projects/$(basename "$(dirname "$src")")/"
+}
+
+run() {
+  # default dir runs without CLAUDE_CONFIG_DIR so its login (keychain on macOS) stays the same
+  if [ "$1" = "$MAIN" ]; then (unset CLAUDE_CONFIG_DIR; shift; claude "$@")
+  else local d=$1; shift; CLAUDE_CONFIG_DIR="$d" claude "$@"; fi
+}
+
+case "$1" in
+  status) cmd_status; exit ;;
+  add) cmd_add "$2"; exit ;;
+  accounts) accts; exit ;;
+  help|-h|--help)
+    cat <<EOF
+claude-auto [claude args]   start Claude Code; switches account when usage runs out
+claude-auto status          usage of every account
+claude-auto add <n>         make ~/.claude-<n> as a new account (shares history + settings)
+claude-auto accounts        list accounts ($CONF)
+Env: CLAUDE_AUTO_MAX=95  switch when an account reaches this % used
+EOF
+    exit ;;
+esac
+
+command -v claude >/dev/null || { echo "claude not found on PATH" >&2; exit 1; }
+export CLAUDE_AUTO_MAX=$MAX CLAUDE_AUTO_PID=$$
+export CLAUDE_AUTO_FLAG="${TMPDIR:-/tmp}/claude-auto.$$"
+trap 'rm -f "$CLAUDE_AUTO_FLAG"' EXIT
+
+cur="${CLAUDE_CONFIG_DIR:-}"; args=("$@")
+if [ -z "$cur" ]; then echo "claude-auto: checking accounts..." >&2; pick ""; cur=$PICK; fi
+while :; do
+  if [ -z "$cur" ]; then
+    # all full -> wait for the first reset
+    [ "$WAIT_UNTIL" -gt 0 ] || { echo "claude-auto: no account available. Run: claude-auto status" >&2; exit 1; }
+    secs=$(( WAIT_UNTIL - $(date +%s) + 60 ))
+    echo "claude-auto: all accounts full. Waiting $(( secs / 60 )) min for the first reset (Ctrl+C to stop)..." >&2
+    sleep $(( secs > 60 ? secs : 60 ))
+    pick ""; cur=$PICK; [ -n "$prev" ] && [ -n "$cur" ] && carry "$prev" "$cur" "$sid"; continue
+  fi
+  echo "claude-auto: using $(name "$cur")" >&2
+  rm -f "$CLAUDE_AUTO_FLAG"
+  run "$cur" "${args[@]}"
+  [ -s "$CLAUDE_AUTO_FLAG" ] || exit 0   # normal exit
+  sid=$(cat "$CLAUDE_AUTO_FLAG"); prev=$cur
+  echo -e "\nclaude-auto: $(name "$cur") hit its usage limit. Switching..." >&2
+  pick "$cur"; cur=$PICK
+  [ -n "$cur" ] && carry "$prev" "$cur" "$sid"
+  args=(--resume "$sid" "The previous account hit its usage limit and this session moved to another account. Continue the task exactly where you left off.")
+done
