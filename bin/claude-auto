@@ -76,7 +76,7 @@ cmd_login() {
 cmd_switch() {
   local want=$1 cur tgt pct _
   [ -n "$CLAUDE_AUTO_FLAG" ] && [ -n "$CLAUDE_CODE_SESSION_ID" ] && [ -n "$CLAUDE_PID" ] || {
-    echo "Run this inside a session started with claude-auto, e.g.  ! claude-auto switch 2   or  /switch 2" >&2; exit 1; }
+    echo "This session was started with plain claude, so it can't switch. Type /exit, then run: claude-auto -c   (reopens this conversation with switching on)" >&2; exit 1; }
   cur="${CLAUDE_CONFIG_DIR:-$MAIN}"; cur=${cur%/}
   if [ -z "$want" ]; then
     pick "$cur"; tgt=$PICK
