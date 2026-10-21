@@ -63,6 +63,7 @@ Claude Code reopens **the same conversation** on account 2 and continues the tas
 | **Automatic account switching** | Moves to the next Claude account as soon as the usage limit is reached |
 | **Checks usage first** | Reads each account's real 5-hour and weekly usage before it switches |
 | **Same session, full context** | Resumes the same session ID, so the new account sees the whole conversation |
+| **Continues, never restarts** | Checks what is already done in your code and picks up at the next unfinished step |
 | **No false switches** | Ignores short 429 bursts while your plan still has room |
 | **Waits for reset** | If every account is full, waits for the earliest reset, then continues |
 | **Usage dashboard** | `claude-auto status` shows % used and reset time for every account |
@@ -118,7 +119,8 @@ flowchart LR
 1. `claude-auto` checks the usage of each account in your list and starts Claude Code on the first one with room.
 2. When a turn fails with a `rate_limit` error, the `StopFailure` hook asks that account's usage endpoint (the same data `/usage` shows) whether the plan is really full.
 3. If it is full, the hook saves the session ID and closes Claude Code. If it isn't, nothing happens.
-4. `claude-auto` checks the remaining accounts and reopens the same session on the first one with usage left, with the message *"continue the task exactly where you left off"*.
+4. `claude-auto` checks the remaining accounts and reopens the same session on the first one with usage left. It brings along the session's edit checkpoints, todo list, plans and pasted images, and keeps your flags (`-p`, `--model`, permission mode).
+5. Claude is told **not to start over**. It checks the real state of your code (git status / git diff or the files it was editing), skips the finished steps and continues from the next unfinished one.
 
 Accounts that are not logged in are skipped. If an account's token has expired, it is tried last, because Claude Code refreshes the token on start.
 
@@ -145,6 +147,7 @@ account 1 (~/.claude)             97% used, resets Thu 17:00
 |---|---|---|
 | `~/.config/claude-auto/accounts` | `~/.claude` + any `~/.claude-<n>` | One config folder per line, tried top to bottom |
 | `CLAUDE_AUTO_MAX` | `95` | Treat an account as full at this % used, for example `CLAUDE_AUTO_MAX=90 claude-auto` |
+| `CLAUDE_AUTO_MSG` | built-in | The message sent to the resumed session (default: check the current state, continue from the next unfinished step, never start over) |
 | `CLAUDE_AUTO_HOME` | `~/.local/share/claude-auto` | Install folder |
 
 ## Platform support

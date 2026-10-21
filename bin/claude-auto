@@ -9,7 +9,7 @@ CONF="${XDG_CONFIG_HOME:-$HOME/.config}/claude-auto/accounts"
 USAGE="$HOME_DIR/lib/usage.py"
 MAIN="$HOME/.claude"
 MAX=${CLAUDE_AUTO_MAX:-95}   # % used = treat as full
-SHARE=(projects settings.json CLAUDE.md skills plugins agents commands hooks output-styles)
+SHARE=(projects settings.json settings.local.json CLAUDE.md skills plugins agents commands hooks output-styles plans paste-cache file-history todos)
 
 accts() { [ -f "$CONF" ] && sed -e 's/#.*//' -e "s|^~|$HOME|" -e '/^\s*$/d' "$CONF" || echo "$MAIN"; }
 name() { [ "$1" = "$MAIN" ] && echo "account 1 (~/.claude)" || echo "${1/#$HOME/\~}"; }
@@ -63,14 +63,20 @@ pick() {
   PICK=$maybe   # expired token: claude refreshes it on start
 }
 
-# copy the transcript when the next account does not share projects/
+# bring the session's state to the next account when its folders are not shared
 carry() {
-  local from=$1 to=$2 sid=$3 src
-  [ "$(cd "$from/projects" 2>/dev/null && pwd -P)" = "$(cd "$to/projects" 2>/dev/null && pwd -P)" ] && return
-  src=$(find "$from/projects" -name "$sid.jsonl" 2>/dev/null | head -1)
-  [ -n "$src" ] || return
-  mkdir -p "$to/projects/$(basename "$(dirname "$src")")"
-  cp "$src" "$to/projects/$(basename "$(dirname "$src")")/"
+  local from=$1 to=$2 sid=$3 src f
+  same() { [ "$(cd "$from/$1" 2>/dev/null && pwd -P)" = "$(cd "$to/$1" 2>/dev/null && pwd -P)" ]; }
+  if ! same projects; then
+    src=$(find "$from/projects" -name "$sid.jsonl" 2>/dev/null | head -1)
+    [ -n "$src" ] && mkdir -p "$to/projects/$(basename "$(dirname "$src")")" && cp "$src" "$to/projects/$(basename "$(dirname "$src")")/"
+    [ -d "${src%.jsonl}" ] && cp -R "${src%.jsonl}" "$to/projects/$(basename "$(dirname "$src")")/"   # subagent transcripts
+  fi
+  # edit checkpoints, todo list, plans, pasted images
+  same file-history || { [ -d "$from/file-history/$sid" ] && mkdir -p "$to/file-history" && cp -R "$from/file-history/$sid" "$to/file-history/"; }
+  same todos || for f in "$from/todos/$sid"*; do [ -e "$f" ] && mkdir -p "$to/todos" && cp -n "$f" "$to/todos/"; done
+  for f in plans paste-cache; do same $f || { [ -d "$from/$f" ] && mkdir -p "$to/$f" && cp -Rn "$from/$f/." "$to/$f/"; }; done
+  return 0
 }
 
 run() {
@@ -93,6 +99,8 @@ Env: CLAUDE_AUTO_MAX=95  switch when an account reaches this % used
 EOF
     exit ;;
 esac
+
+RESUME_MSG="${CLAUDE_AUTO_MSG:-The previous Claude account hit its usage limit in the middle of this task, and this same session has moved to another account. Do NOT start over. Everything you already did is still on disk. First check the real current state (git status / git diff, or re-read the files you were changing) to see exactly how far the work got, then continue from the next unfinished step. Do not redo finished steps, do not recreate files that already exist, and do not ask again for answers already given above.}"
 
 command -v claude >/dev/null || { echo "claude not found on PATH" >&2; exit 1; }
 export CLAUDE_AUTO_MAX=$MAX CLAUDE_AUTO_PID=$$
@@ -127,5 +135,5 @@ while :; do
   echo -e "\nclaude-auto: $(name "$cur") hit its usage limit. Switching..." >&2
   pick "$cur"; cur=$PICK
   [ -n "$cur" ] && carry "$prev" "$cur" "$sid"
-  args=("${keep[@]}" --resume "$sid" "The previous account hit its usage limit and this session moved to another account. Continue the task exactly where you left off.")
+  args=("${keep[@]}" --resume "$sid" "$RESUME_MSG")
 done
