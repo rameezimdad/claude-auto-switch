@@ -90,6 +90,7 @@ Claude Code reopens **the same conversation** on account 2 and continues the tas
 | **No false switches** | Ignores short 429 bursts while your plan still has room |
 | **Waits for reset** | If every account is full, waits for the earliest reset, then continues |
 | **See which account is running** | Status line shows `account 2 · you@mail.com · 12% used · Opus` at the bottom of Claude Code |
+| **Switch by hand** | Type `/switch 2` inside a session to move to account 2 right away |
 | **Usage dashboard** | `claude-auto status` shows % used and reset time for every account |
 | **Shared setup** | Every account shares history, settings, skills, plugins and CLAUDE.md |
 | **Official hooks only** | Uses Claude Code's `StopFailure` hook. Nothing in Claude Code is patched. |
@@ -178,6 +179,7 @@ Accounts that are not logged in are skipped. If an account's token has expired, 
 | `claude-auto add <n>` | Add a specific slot, for example `claude-auto add 7` |
 | `claude-auto login <n>` | Log in again or change the subscription on account `n` (`1` = `~/.claude`) |
 | `claude-auto remove <n>` | Take account `n` out of the rotation (folder and login are kept) |
+| `/switch [n]` | Inside a session: move it to account `n` now, or to the next account with room |
 | `claude-auto accounts` | List accounts in the order they are tried |
 | `claude-auto help` | Show help |
 
@@ -187,6 +189,19 @@ account 1 (~/.claude)             97% used, resets Thu 17:00
 ~/.claude-2                        12% used, resets Thu 21:00
 ~/.claude-3                        not logged in
 ```
+
+## Switch accounts yourself, mid-session
+
+You don't have to wait for the limit. Inside any session started with `claude-auto`, type:
+
+```
+/switch 3        move this session to account 3 now
+/switch          move to the next account that has usage left
+```
+
+The session closes and reopens on that account in a second or two, with the same conversation. Then you keep typing. `/switch` uses no tokens, and it refuses an account that is full or not logged in.
+
+You can also run it as a shell command inside the session: `! claude-auto switch 2`.
 
 ## See which account is running
 

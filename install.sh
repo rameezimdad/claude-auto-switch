@@ -19,7 +19,7 @@ if [ ! -f "$src/bin/claude-auto" ]; then
   curl -fsSL "$REPO/archive/refs/heads/main.tar.gz" | tar -xz -C "$src" --strip-components=1
 fi
 mkdir -p "$DEST" "$BIN"
-cp -R "$src/bin" "$src/hooks" "$src/lib" "$DEST/"
+cp -R "$src/bin" "$src/hooks" "$src/lib" "$src/commands" "$DEST/"
 cp "$src/uninstall.sh" "$DEST/" 2>/dev/null || true
 chmod +x "$DEST/bin/claude-auto" "$DEST/hooks/auto_switch.sh"
 ln -sf "$DEST/bin/claude-auto" "$BIN/claude-auto"
@@ -32,7 +32,7 @@ if [ ! -f "$CONF" ]; then
 fi
 
 # StopFailure(rate_limit) hook in every account's settings.json
-HOOK="$DEST/hooks/auto_switch.sh" SL="$DEST/lib/statusline.py" CONF="$CONF" python3 - <<'EOF'
+DEST="$DEST" HOOK="$DEST/hooks/auto_switch.sh" SL="$DEST/lib/statusline.py" CONF="$CONF" python3 - <<'EOF'
 import json, os
 hook, seen = os.environ['HOOK'], set()
 dirs = [l.strip() for l in open(os.environ['CONF']) if l.strip() and not l.startswith('#')]
@@ -55,6 +55,16 @@ for d in dirs:
         changed = True; print('  status line added:', p)
     if changed:
         json.dump(s, open(p, 'w'), indent=2); open(p, 'a').write('\n')
+
+# /switch slash command in every account (a user's own switch.md is left alone)
+src = os.path.join(os.environ['DEST'], 'commands', 'switch.md'); done = set()
+for d in dirs:
+    c = os.path.realpath(os.path.join(os.path.expanduser(d), 'commands'))
+    if c in done: continue
+    done.add(c); f = os.path.join(c, 'switch.md')
+    if os.path.exists(f) and 'claude-auto switch' not in open(f).read(): continue
+    os.makedirs(c, exist_ok=True); open(f, 'w').write(open(src).read())
+    print('  /switch added:', f)
 EOF
 
 echo

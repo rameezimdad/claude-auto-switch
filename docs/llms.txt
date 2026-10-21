@@ -8,7 +8,8 @@ Author: Mohammad Rameez Imdad (Rameez Scripts), https://rameezscripts.com
 - Install: `curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash`
 - Add accounts: `claude-auto add` (once per extra subscription, then `/login`)
 - Run: `claude-auto` instead of `claude`; every Claude Code flag passes through
-- Status: `claude-auto status` shows % used and reset time per account
+- Status: `claude-auto status` shows % used, reset time and email per account
+- Manual switch: type `/switch [n]` inside a session to move it to account n now
 - Switch rule: account at 95% or more of its limit (env `CLAUDE_AUTO_MAX`)
 - Mechanism: official Claude Code `StopFailure` hook (matcher `rate_limit`) + a bash wrapper using `claude --resume <session id>`; Claude Code is not modified
 - Carries: session transcript, edit checkpoints, todos, plans, pasted images, flags such as `-p` and `--model`

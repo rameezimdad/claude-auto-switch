@@ -20,6 +20,8 @@ for d in [l.strip() for l in open(os.environ['CONF']) if l.strip() and not l.sta
     if 'claude-auto/lib/statusline.py' in (s.get('statusLine') or {}).get('command', ''): s.pop('statusLine')
     json.dump(s, open(p, 'w'), indent=2); open(p, 'a').write('\n')
     print('  hook removed:', p)
+    f = os.path.join(os.path.dirname(p), 'commands', 'switch.md')
+    if os.path.exists(f) and 'claude-auto switch' in open(f).read(): os.remove(f); print('  /switch removed:', f)
 EOF
 rm -f "$HOME/.local/bin/claude-auto"
 rm -rf "$DEST"

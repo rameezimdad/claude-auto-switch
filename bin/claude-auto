@@ -72,6 +72,29 @@ cmd_login() {
 }
 
 # take an account out of the rotation (folder + login are kept)
+# switch the running session to another account by hand (run inside the session)
+cmd_switch() {
+  local want=$1 cur tgt pct _
+  [ -n "$CLAUDE_AUTO_FLAG" ] && [ -n "$CLAUDE_CODE_SESSION_ID" ] && [ -n "$CLAUDE_PID" ] || {
+    echo "Run this inside a session started with claude-auto, e.g.  ! claude-auto switch 2   or  /switch 2" >&2; exit 1; }
+  cur="${CLAUDE_CONFIG_DIR:-$MAIN}"; cur=${cur%/}
+  if [ -z "$want" ]; then
+    pick "$cur"; tgt=$PICK
+    [ -n "$tgt" ] || { echo "No other account has usage left. Run: claude-auto status" >&2; exit 1; }
+  else
+    [[ "$want" =~ ^[0-9]+$ ]] || { echo "usage: claude-auto switch [account number]" >&2; exit 1; }
+    tgt=$(accts | sed -n "${want}p")
+    [ -n "$tgt" ] || { echo "No account $want. Run: claude-auto accounts" >&2; exit 1; }
+    read -r pct _ < <(usage "$tgt")
+    [ "$pct" = NOLOGIN ] && { echo "Account $want is not logged in. Run: claude-auto login $want" >&2; exit 1; }
+    [[ "$pct" =~ ^[0-9]+$ ]] && [ "$pct" -ge "$MAX" ] && { echo "Account $want is at ${pct}% used. Pick another: claude-auto status" >&2; exit 1; }
+  fi
+  [ "$tgt" = "$cur" ] && { echo "Already on $(label "$cur")."; exit 0; }
+  printf '%s\n%s\n' "$CLAUDE_CODE_SESSION_ID" "$tgt" > "$CLAUDE_AUTO_FLAG"
+  echo "Switching this session to $(label "$tgt")..."
+  kill -TERM "$CLAUDE_PID"
+}
+
 cmd_remove() {
   local n=$1 dir
   [[ "$n" =~ ^[0-9]+$ ]] && [ "$n" -ge 2 ] || { echo "usage: claude-auto remove <number>" >&2; exit 1; }
@@ -126,6 +149,7 @@ case "$1" in
   add) cmd_add "$2"; exit ;;
   login) cmd_login "$2"; exit ;;
   remove) cmd_remove "$2"; exit ;;
+  switch) cmd_switch "$2"; exit ;;
   accounts) accts; exit ;;
   help|-h|--help)
     cat <<EOF
@@ -134,6 +158,7 @@ claude-auto status          usage of every account
 claude-auto add [n]         add another Claude subscription (next free slot if n is left out)
 claude-auto login <n>       log in (or switch login) on account n  (1 = ~/.claude)
 claude-auto remove <n>      take account n out of the rotation
+claude-auto switch [n]      inside a session: move it to account n now (next with room if n is left out)
 claude-auto accounts        list accounts ($CONF)
 Env: CLAUDE_AUTO_MAX=95  switch when an account reaches this % used
 EOF
@@ -171,7 +196,15 @@ while :; do
   rm -f "$CLAUDE_AUTO_FLAG"
   run "$cur" "${args[@]}"
   [ -s "$CLAUDE_AUTO_FLAG" ] || exit 0   # normal exit
-  sid=$(cat "$CLAUDE_AUTO_FLAG"); prev=$cur
+  tgt=; { read -r sid; read -r tgt; } < "$CLAUDE_AUTO_FLAG"; prev=$cur
+  if [ -n "$tgt" ]; then
+    # manual /switch: same session, no extra prompt (print mode needs one)
+    echo -e "\nclaude-auto: switching to $(label "$tgt") as asked..." >&2
+    cur=$tgt; carry "$prev" "$cur" "$sid"
+    args=("${keep[@]}" --resume "$sid")
+    [[ " ${keep[*]} " == *" -p "* || " ${keep[*]} " == *" --print "* ]] && args+=("The user moved this session to another Claude account. Continue exactly where you left off; do not start over.")
+    continue
+  fi
   echo -e "\nclaude-auto: $(name "$cur") hit its usage limit. Switching..." >&2
   pick "$cur"; cur=$PICK
   [ -n "$cur" ] && carry "$prev" "$cur" "$sid"
