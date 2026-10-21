@@ -109,179 +109,458 @@ YouTube: https://www.youtube.com/@rameezimdad (Subscribe for more!)
   ]
 }
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>try{var t=localStorage.getItem('ca-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <style>
-:root{--navy:#001f3f;--blue:#0074D9;--bg:#ffffff;--bg-soft:#f5f7fa;--text:#14212e;--muted:#5a6878;--line:#e3e8ee;--code-bg:#0d1117;--code-text:#e6edf3}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#000000;--bg-soft:#0d0d0d;--text:#e8e8e8;--muted:#a0a0a0;--line:#262626}}
-:root[data-theme="dark"]{--bg:#000000;--bg-soft:#0d0d0d;--text:#e8e8e8;--muted:#a0a0a0;--line:#262626}
+:root{
+  --navy:#001f3f;--navy-2:#062a52;--blue:#0074D9;--blue-soft:#5aa9ec;
+  --bg:#ffffff;--bg-soft:#f6f8fb;--card:#ffffff;--text:#0f1b2a;--muted:#5b6b7d;--line:#e4e9f0;
+  --term:#0b0f14;--term-line:#1d2530;--term-text:#d6dee8;--ok:#3fb950;--warn:#f0b429;--bad:#ff6b6b;
+  --r:10px;--shadow:0 1px 2px rgba(15,27,42,.05),0 8px 24px rgba(15,27,42,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--bg-soft:#0b0b0b;--card:#0e0e0e;--text:#ececec;--muted:#9a9a9a;--line:#232323;--shadow:none}}
+:root[data-theme="dark"]{--bg:#000;--bg-soft:#0b0b0b;--card:#0e0e0e;--text:#ececec;--muted:#9a9a9a;--line:#232323;--shadow:none}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 Inter,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;touch-action:manipulation}
 a{color:var(--blue);text-decoration:none}
-a:hover{color:var(--navy)}
-.wrap{max-width:920px;margin:0 auto;padding:0 16px}
-header.hero{background:var(--navy);color:#fff;padding:56px 0 48px}
-.hero h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:0 0 14px}
-.hero h1 span{color:#5aa9ec}
-.hero p{color:#cfe0f1;font-size:18px;margin:0 0 24px;max-width:680px}
-.install{display:flex;gap:8px;align-items:stretch;max-width:100%}
-.install code{flex:1;min-width:0;overflow-x:auto;white-space:nowrap;background:var(--code-bg);color:var(--code-text);padding:12px 14px;border-radius:8px;font:14px/1.5 Consolas,Menlo,monospace}
-.btn{border:0;border-radius:8px;padding:0 18px;min-height:44px;font:600 15px/1 inherit;cursor:pointer;background:var(--blue);color:#fff;display:inline-flex;align-items:center}
-.btn.ghost{background:transparent;border:1px solid #5aa9ec;color:#fff}
-.hero .links{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-main section{padding:40px 0;border-bottom:1px solid var(--line)}
-h2{font-size:26px;margin:0 0 16px}
-h3{font-size:18px;margin:24px 0 6px}
-.answer{background:var(--bg-soft);border-left:4px solid var(--blue);padding:16px 18px;border-radius:0 8px 8px 0}
-.answer p{margin:0}
-pre{background:var(--code-bg);color:var(--code-text);padding:16px;border-radius:8px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace}
-code{font-family:Consolas,Menlo,monospace}
-p code,td code,li code{background:var(--bg-soft);border:1px solid var(--line);padding:1px 6px;border-radius:4px;font-size:14px}
-.tbl{overflow-x:auto}
+code,pre,.mono{font-family:"JetBrains Mono",Consolas,Menlo,monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:8px;border:1px solid transparent;font:600 15px/1 Inter,sans-serif;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#0a63b8;color:#fff}
+.btn-line{border-color:rgba(255,255,255,.28);color:#fff;background:transparent}
+.btn-line:hover{border-color:#fff;color:#fff}
+.btn-plain{border-color:var(--line);color:var(--text);background:var(--card)}
+.btn-plain:hover{border-color:var(--blue);color:var(--blue)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(0,31,63,.96);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:18px}
+.brand i{color:var(--blue-soft)}
+.nav-links{display:flex;gap:22px;margin-left:auto}
+.nav-links a{color:#c9d8e8;font-size:15px;font-weight:500}
+.nav-links a:hover{color:#fff}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#fff;cursor:pointer}
+.icon-btn:hover{border-color:#fff}
+.nav .btn{min-height:40px;padding:0 14px;font-size:14px}
+.menu-btn{display:none}
+
+/* hero */
+.hero{background:var(--navy);color:#fff;padding:72px 0 88px;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.hero .wrap>*{min-width:0}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#cfe0f1;border:1px solid rgba(255,255,255,.18);padding:6px 12px;border-radius:999px;margin-bottom:22px}
+.tag .dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.hero h1{font-size:clamp(34px,5.2vw,58px);line-height:1.06;letter-spacing:-.025em;margin:0 0 18px;font-weight:800}
+.hero h1 span{color:var(--blue-soft)}
+.lead{font-size:18px;color:#c3d4e6;margin:0 0 28px;max-width:560px}
+.lead b{color:#fff}
+.install{display:flex;align-items:center;gap:10px;background:#000c19;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:6px 6px 6px 16px;max-width:560px}
+.install code{flex:1;min-width:0;overflow-x:auto;white-space:nowrap;color:#d6e4f2;font-size:13.5px;scrollbar-width:none}
+.install code::-webkit-scrollbar{display:none}
+.install code .p{color:var(--blue-soft);user-select:none}
+.copy{min-height:38px;padding:0 14px;font-size:14px}
+.hero-ctas{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.hero-note{margin-top:16px;font-size:13.5px;color:#8fa9c4}
+
+/* terminal */
+.term{background:var(--term);border:1px solid #1e2a38;border-radius:12px;box-shadow:0 30px 60px rgba(0,0,0,.35);overflow:hidden}
+.term-bar{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--term-line);background:#0e141b}
+.term-bar span{width:11px;height:11px;border-radius:50%;background:#2c3644}
+.term-bar b{margin-left:10px;font:500 12.5px "JetBrains Mono",monospace;color:#7d8b9c}
+.term-body{padding:18px 18px 22px;font:13.5px/1.75 "JetBrains Mono",monospace;color:var(--term-text);min-height:340px}
+.term-body .l{white-space:pre-wrap;word-break:break-word;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}
+.term-body .l.on{opacity:1;transform:none}
+.c-p{color:var(--blue-soft)}.c-m{color:#7d8b9c}.c-ok{color:var(--ok)}.c-w{color:var(--warn)}.c-b{color:var(--bad)}.c-hl{color:#fff;font-weight:500}
+.meter{display:inline-block;width:110px;height:7px;background:#1d2530;border-radius:4px;vertical-align:middle;margin:0 8px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--blue)}
+.meter i.full{background:var(--bad)}
+.cursor{display:inline-block;width:8px;height:15px;background:var(--blue-soft);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+.strip .wrap{padding-top:0;padding-bottom:0}
+@keyframes blink{50%{opacity:0}}
+
+/* facts strip */
+.strip{border-bottom:1px solid var(--line);background:var(--bg)}
+.strip .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+.strip .wrap>div{padding:22px 18px;border-left:1px solid var(--line)}
+.strip .wrap>div:first-child{border-left:0;padding-left:0}
+.strip b{display:block;font-size:17px}
+.strip span{color:var(--muted);font-size:14px}
+
+/* sections */
+section{padding:84px 0}
+section.alt{background:var(--bg-soft)}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+h2{font-size:clamp(26px,3.4vw,38px);line-height:1.15;letter-spacing:-.02em;margin:0 0 14px}
+.sub{color:var(--muted);font-size:17px;max-width:680px;margin:0 0 40px}
+.answer{border-left:3px solid var(--blue);padding:4px 0 4px 20px;font-size:18px;max-width:860px;margin:0}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.step .n{font:600 13px "JetBrains Mono",monospace;color:var(--blue);margin-bottom:10px}
+.step h3{font-size:17px;margin:0 0 6px}
+.step p{margin:0;color:var(--muted);font-size:15px}
+
+/* features */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.feat{background:var(--card);padding:26px}
+.feat h3{font-size:17px;margin:0 0 6px;display:flex;align-items:center;gap:10px}
+.feat h3 i{color:var(--blue);width:18px;text-align:center}
+.feat p{margin:0;color:var(--muted);font-size:15px}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
 table{width:100%;border-collapse:collapse;font-size:15px}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-th{background:var(--bg-soft)}
-ol li{margin-bottom:8px}
-.langs p{margin:6px 0}
-footer{padding:32px 0 48px;color:var(--muted);font-size:14px}
-footer .contact{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
-@media (max-width:600px){.install{flex-direction:column}.btn{justify-content:center}}
-a,a:hover,a:focus,button{text-decoration:none}
+th,td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--bg-soft)}
+tr.us td{background:rgba(0,116,217,.07)}
+.yes{color:var(--ok);font-weight:600}.no{color:var(--bad);font-weight:600}.mid{color:var(--warn);font-weight:600}
+td code{font-size:13.5px;background:var(--bg-soft);border:1px solid var(--line);padding:2px 7px;border-radius:5px;white-space:nowrap}
+
+/* install */
+.inst{display:grid;gap:18px;max-width:820px}
+.inst-step{display:grid;grid-template-columns:40px 1fr;gap:16px}
+.inst-step .n{width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.inst-step h3{margin:6px 0 8px;font-size:18px}
+.inst-step>div{min-width:0}
+.code{position:relative;background:var(--term);border-radius:var(--r);border:1px solid #1e2a38}
+.code pre{margin:0;padding:16px 70px 16px 18px;overflow-x:auto;color:var(--term-text);font-size:13.5px;line-height:1.7}
+.code .copy{position:absolute;top:8px;right:8px;min-height:32px;padding:0 10px;font-size:13px;background:#1b2532;color:#cfdbe8;border:1px solid #2a3647}
+.code .copy:hover{color:#fff;border-color:var(--blue-soft)}
+.c-c{color:#6e7f92}
+
+/* faq */
+.faq{max-width:860px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:20px 40px 20px 0;font-weight:600;font-size:17px;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"\f067";font:900 14px "Font Awesome 6 Free";position:absolute;right:6px;top:24px;color:var(--muted);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0 0 20px;color:var(--muted)}
+.faq code{font-size:14px}
+
+/* languages */
+.langs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.lang{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;font-size:15px}
+.lang b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+
+/* cta + footer */
+.cta{background:var(--navy);color:#fff;text-align:center;padding:76px 0}
+.cta h2{color:#fff}
+.cta p{color:#c3d4e6;margin:0 auto 28px;max-width:560px}
+.cta .install{margin:0 auto}
+footer{background:var(--bg);border-top:1px solid var(--line);padding:48px 0 36px;font-size:15px}
+.foot{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:32px}
+.foot h4{margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.foot a{color:var(--text);display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.foot a:hover{color:var(--blue)}
+.foot a i{width:18px;color:var(--blue)}
+.legal{margin-top:32px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+
+/* phones */
+@media (max-width:900px){
+  .hero .wrap{grid-template-columns:1fr}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .grid3{grid-template-columns:1fr 1fr}
+  .strip .wrap{grid-template-columns:1fr 1fr}
+  .strip .wrap>div:nth-child(3){border-left:0;padding-left:0}
+  .strip .wrap>div:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media (max-width:768px){
+  .nav-links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.1);padding:8px 20px 16px}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 0;font-size:16px}
+  .menu-btn{display:inline-flex}
+  .nav .gh-label{display:none}
+  .nav-actions{margin-left:auto}
+  .hero{padding:48px 0 56px}
+  section{padding:60px 0}
+  .steps,.grid3,.langs,.foot{grid-template-columns:1fr}
+  .term-body{font-size:12px;min-height:300px}
+  .meter{width:60px}
+  .install{flex-wrap:wrap;padding:10px}
+  .install code{flex-basis:100%}
+  .install .copy{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+a,a:hover,a:focus,button,summary{text-decoration:none}
 </style>
 </head>
 <body>
-<header class="hero">
+<nav class="nav" aria-label="Main">
   <div class="wrap">
-    <h1>Claude limit reached? <span>Keep working.</span></h1>
-    <p><b>claude-auto</b> is a free, open-source tool for Claude Code. When one Claude account hits its 5-hour or weekly usage limit, it switches to your next Claude account that still has usage left and continues the <b>same session</b> from the next unfinished step.</p>
-    <div class="install">
-      <code id="cmd">curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash</code>
-      <button class="btn" id="copy" type="button" aria-label="Copy install command">Copy</button>
+    <a class="brand" href="#top" aria-label="claude-auto home"><i class="fa-solid fa-terminal"></i>claude-auto</a>
+    <div class="nav-links" id="navLinks">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#install">Install</a>
+      <a href="#faq">FAQ</a>
     </div>
-    <div class="links">
-      <a class="btn ghost" href="https://github.com/rameezimdad/claude-auto-switch">View on GitHub</a>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle dark mode"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <a class="btn btn-primary" href="https://github.com/rameezimdad/claude-auto-switch" aria-label="View on GitHub"><i class="fa-brands fa-github"></i><span class="gh-label">GitHub</span></a>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="tag"><span class="dot"></span>Free and open source &middot; v1.0.0</div>
+      <h1>Claude limit reached? <span>Keep working.</span></h1>
+      <p class="lead"><b>claude-auto</b> switches Claude Code to your next Claude account the moment one hits its 5-hour or weekly limit, and continues the <b>same session</b> from the next unfinished step.</p>
+      <div class="install">
+        <code><span class="p">$ </span><span class="cmd">curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash</span></code>
+        <button class="btn btn-primary copy" type="button" data-copy="curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash"><i class="fa-regular fa-copy"></i>Copy</button>
+      </div>
+      <div class="hero-ctas">
+        <a class="btn btn-line" href="#install"><i class="fa-solid fa-book-open"></i>Setup guide</a>
+        <a class="btn btn-line" href="https://github.com/rameezimdad/claude-auto-switch"><i class="fa-brands fa-github"></i>Source code</a>
+      </div>
+      <div class="hero-note"><i class="fa-solid fa-check"></i> Linux, Windows (WSL) and macOS &nbsp;&middot;&nbsp; <i class="fa-solid fa-check"></i> Any number of accounts</div>
+    </div>
+    <div class="term" aria-label="Example: claude-auto switching from a full account to the next one">
+      <div class="term-bar"><span></span><span></span><span></span><b>claude-auto</b></div>
+      <div class="term-body" id="term"></div>
     </div>
   </div>
 </header>
 
-<main class="wrap">
+<div class="strip">
+  <div class="wrap">
+    <div><b>Free, MIT</b><span>No paid tier</span></div>
+    <div><b>Same session</b><span>Continues the next step</span></div>
+    <div><b>Unlimited accounts</b><span>claude-auto add</span></div>
+    <div><b>Official hook</b><span>Claude Code not patched</span></div>
+  </div>
+</div>
+
+<main>
   <section id="what">
-    <h2>What is claude-auto?</h2>
-    <div class="answer"><p>claude-auto is a command-line wrapper for Claude Code that rotates between several Claude subscriptions (Pro, Max or Team). It checks each account's real usage, and when the current account reaches its usage limit it resumes the same conversation on the next account with usage left, so your work does not stop.</p></div>
-    <h3>Key facts</h3>
-    <div class="tbl"><table>
-      <tr><th>Price</th><td>Free, MIT license</td></tr>
-      <tr><th>Works with</th><td>Claude Code on Linux, Windows (WSL) and macOS</td></tr>
-      <tr><th>Accounts</th><td>Any number of Claude Pro / Max / Team subscriptions</td></tr>
-      <tr><th>Switches when</th><td>An account reaches 95% of its 5-hour or weekly limit (configurable)</td></tr>
-      <tr><th>Keeps</th><td>The same session, full context, edit checkpoints, todos, plans and your flags</td></tr>
-      <tr><th>Install time</th><td>Under 5 minutes, one command</td></tr>
-    </table></div>
+    <div class="wrap">
+      <div class="eyebrow">What is claude-auto?</div>
+      <h2>Your Claude Code session should not die at the usage limit.</h2>
+      <p class="answer">claude-auto is a command-line wrapper for Claude Code that rotates between several Claude subscriptions (Pro, Max or Team). It checks each account's real usage, and when the current account reaches its usage limit it resumes the same conversation on the next account with usage left, so your work does not stop.</p>
+    </div>
   </section>
 
-  <section id="options">
-    <h2>What can you do when the Claude usage limit is reached?</h2>
-    <div class="tbl"><table>
-      <thead><tr><th>Option</th><th>Keeps working now</th><th>Keeps the same session</th><th>Extra cost</th></tr></thead>
-      <tbody>
-        <tr><td>Wait for the reset</td><td>No, up to 5 hours or until the weekly reset</td><td>Yes</td><td>None</td></tr>
-        <tr><td>Open another account by hand</td><td>Yes</td><td>Only if you find and resume it yourself</td><td>Another subscription</td></tr>
-        <tr><td>Switch to an API key</td><td>Yes</td><td>Yes</td><td>Pay per token</td></tr>
-        <tr><td><b>claude-auto</b></td><td><b>Yes, automatic</b></td><td><b>Yes, continues the next step</b></td><td>Only subscriptions you already have</td></tr>
-      </tbody>
-    </table></div>
+  <section id="how" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">How it works</div>
+      <h2>Four steps, fully automatic.</h2>
+      <p class="sub">You keep typing. claude-auto handles the switch in the background in a few seconds.</p>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h3>Pick an account</h3><p>Starts Claude Code on the first account that is under its 5-hour and weekly limit.</p></div>
+        <div class="step"><div class="n">02</div><h3>Catch the limit</h3><p>Claude Code's official StopFailure hook checks the real usage. Short error bursts are ignored.</p></div>
+        <div class="step"><div class="n">03</div><h3>Move the session</h3><p>The same session opens on the next account with room, with checkpoints, todos and plans.</p></div>
+        <div class="step"><div class="n">04</div><h3>Continue the work</h3><p>Claude checks what is already done in your code and picks up at the next unfinished step.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="eyebrow">Features</div>
+      <h2>Built to keep long tasks running.</h2>
+      <p class="sub">Everything a session needs moves with it, so the next account carries on as if nothing happened.</p>
+      <div class="grid3">
+        <div class="feat"><h3><i class="fa-solid fa-gauge-high"></i>Checks usage first</h3><p>Reads each account's real 5-hour and weekly usage before it switches. Full accounts are skipped.</p></div>
+        <div class="feat"><h3><i class="fa-solid fa-forward-step"></i>Never starts over</h3><p>Looks at git status and the files it was editing, then continues from the next step.</p></div>
+        <div class="feat"><h3><i class="fa-solid fa-clock-rotate-left"></i>Waits for reset</h3><p>If every account is full, it waits for the earliest reset and continues on its own.</p></div>
+        <div class="feat"><h3><i class="fa-solid fa-users"></i>Unlimited accounts</h3><p>Add account 2, 3, 4 and more with one command. Each shares your history and settings.</p></div>
+        <div class="feat"><h3><i class="fa-solid fa-chart-simple"></i>Usage at a glance</h3><p><code>claude-auto status</code> shows percent used and reset time for every account.</p></div>
+        <div class="feat"><h3><i class="fa-solid fa-shield-halved"></i>Nothing patched</h3><p>One official Claude Code hook and a small bash script. Plain <code>claude</code> works as before.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="options" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">Compare</div>
+      <h2>What can you do when the Claude usage limit is reached?</h2>
+      <p class="sub">The four real options, side by side.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Option</th><th>Keeps working now</th><th>Keeps the same session</th><th>Extra cost</th></tr></thead>
+        <tbody>
+          <tr><td>Wait for the reset</td><td class="no">No, up to 5 hours or the weekly reset</td><td class="yes">Yes</td><td>None</td></tr>
+          <tr><td>Open another account by hand</td><td class="yes">Yes</td><td class="mid">Only if you find and resume it yourself</td><td>Another subscription</td></tr>
+          <tr><td>Switch to an API key</td><td class="yes">Yes</td><td class="yes">Yes</td><td>Pay per token</td></tr>
+          <tr class="us"><td><b>claude-auto</b></td><td class="yes">Yes, automatic</td><td class="yes">Yes, continues the next step</td><td>Only subscriptions you already have</td></tr>
+        </tbody>
+      </table></div>
+    </div>
   </section>
 
   <section id="install">
-    <h2>How to install and set up claude-auto</h2>
-    <ol>
-      <li><b>Install</b> (needs Claude Code, bash, python3, curl):
-<pre>curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash</pre></li>
-      <li><b>Add each extra Claude subscription.</b> Run it once per account, type <code>/login</code>, sign in, then <code>/exit</code>:
-<pre>claude-auto add      # account 2
-claude-auto add      # account 3
-claude-auto add      # account 4, 5 ... no limit</pre></li>
-      <li><b>Work as usual</b> with <code>claude-auto</code> instead of <code>claude</code>. Every Claude Code flag still works.</li>
-    </ol>
+    <div class="wrap">
+      <div class="eyebrow">Get started</div>
+      <h2>How to install and set up claude-auto</h2>
+      <p class="sub">Needs Claude Code, bash, python3 and curl. Takes under 5 minutes.</p>
+      <div class="inst">
+        <div class="inst-step"><div class="n">1</div><div><h3>Install</h3>
+          <div class="code"><pre>curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash</pre><button class="btn copy" type="button" data-copy="curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash"><i class="fa-regular fa-copy"></i>Copy</button></div></div></div>
+        <div class="inst-step"><div class="n">2</div><div><h3>Add each extra Claude subscription</h3>
+          <div class="code"><pre>claude-auto add   <span class="c-c"># account 2, then type /login</span>
+claude-auto add   <span class="c-c"># account 3</span>
+claude-auto add   <span class="c-c"># account 4, 5 ... no limit</span></pre><button class="btn copy" type="button" data-copy="claude-auto add"><i class="fa-regular fa-copy"></i>Copy</button></div></div></div>
+        <div class="inst-step"><div class="n">3</div><div><h3>Work as usual</h3>
+          <div class="code"><pre>claude-auto       <span class="c-c"># instead of claude, every flag still works</span></pre><button class="btn copy" type="button" data-copy="claude-auto"><i class="fa-regular fa-copy"></i>Copy</button></div></div></div>
+      </div>
+    </div>
   </section>
 
-  <section id="how">
-    <h2>How does the automatic switch work?</h2>
-    <ol>
-      <li>claude-auto starts Claude Code on the first account that is under its limit.</li>
-      <li>When a turn fails with a usage-limit error, Claude Code's official <code>StopFailure</code> hook checks that account's real usage.</li>
-      <li>If the account is full, the session is saved and Claude Code closes. A short burst of errors with usage left is ignored.</li>
-      <li>claude-auto checks the other accounts and reopens the same session on the first one with usage left, bringing checkpoints, todos and plans along.</li>
-      <li>Claude checks what is already done in your code (git status or the files it was editing) and continues from the next unfinished step. If every account is full, claude-auto waits for the earliest reset.</li>
-    </ol>
-<pre>claude-auto: ~/.claude hit its usage limit. Switching...
-  ~/.claude-2: 12% used
-claude-auto: using ~/.claude-2</pre>
-  </section>
-
-  <section id="commands">
-    <h2>claude-auto commands</h2>
-    <div class="tbl"><table>
-      <thead><tr><th>Command</th><th>What it does</th></tr></thead>
-      <tbody>
-        <tr><td><code>claude-auto</code></td><td>Start Claude Code with auto switching</td></tr>
-        <tr><td><code>claude-auto status</code></td><td>Percent used and reset time of every account</td></tr>
-        <tr><td><code>claude-auto add</code></td><td>Add the next Claude subscription and log it in</td></tr>
-        <tr><td><code>claude-auto login &lt;n&gt;</code></td><td>Log in again on account n</td></tr>
-        <tr><td><code>claude-auto remove &lt;n&gt;</code></td><td>Take account n out of the rotation</td></tr>
-        <tr><td><code>claude-auto accounts</code></td><td>List accounts in the order they are tried</td></tr>
-      </tbody>
-    </table></div>
+  <section id="commands" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">Reference</div>
+      <h2>claude-auto commands</h2>
+      <p class="sub">Six commands cover everything.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>claude-auto</code></td><td>Start Claude Code with auto switching</td></tr>
+          <tr><td><code>claude-auto status</code></td><td>Percent used and reset time of every account</td></tr>
+          <tr><td><code>claude-auto add</code></td><td>Add the next Claude subscription and log it in</td></tr>
+          <tr><td><code>claude-auto login &lt;n&gt;</code></td><td>Log in again on account n</td></tr>
+          <tr><td><code>claude-auto remove &lt;n&gt;</code></td><td>Take account n out of the rotation</td></tr>
+          <tr><td><code>claude-auto accounts</code></td><td>List accounts in the order they are tried</td></tr>
+        </tbody>
+      </table></div>
+    </div>
   </section>
 
   <section id="faq">
-    <h2>Frequently asked questions</h2>
-    <h3>What to do when the Claude usage limit is reached in Claude Code?</h3>
-    <p>You can wait for the reset (up to 5 hours for the session window, longer for the weekly limit), or use claude-auto, which moves the same Claude Code session to another Claude account you own that still has usage left and continues the task.</p>
-    <h3>How do I use Claude after reaching the limit?</h3>
-    <p>Install claude-auto, add a second Claude account with <code>claude-auto add</code>, and start Claude Code with <code>claude-auto</code>. When the limit is reached it switches accounts automatically.</p>
-    <h3>How do I use multiple Claude accounts in Claude Code?</h3>
-    <p>Each account needs its own config folder (<code>CLAUDE_CONFIG_DIR</code>). <code>claude-auto add</code> creates one that shares your history and settings, and <code>claude-auto</code> picks the account with usage left.</p>
-    <h3>How many Claude accounts can I add to claude-auto?</h3>
-    <p>There is no limit. Run <code>claude-auto add</code> for account 2, 3, 4, 5 and so on. Accounts are tried in order.</p>
-    <h3>Does switching Claude accounts lose my conversation or code progress?</h3>
-    <p>No. claude-auto resumes the same session ID, carries edit checkpoints, todos and plans, and tells Claude to check the current state of the code and continue from the next unfinished step instead of starting over.</p>
-    <h3>What happens when all Claude accounts reach the weekly limit?</h3>
-    <p>claude-auto shows when the earliest account resets, waits until then and continues the session automatically.</p>
-    <h3>How does the Claude usage limit work?</h3>
-    <p>Claude Pro and Max plans have a rolling 5-hour session limit and a weekly limit. <code>claude-auto status</code> shows the percent used and the reset time of each account.</p>
+    <div class="wrap">
+      <div class="eyebrow">FAQ</div>
+      <h2>Frequently asked questions</h2>
+      <p class="sub">Short answers to what people search most about the Claude limit.</p>
+      <div class="faq">
+        <details open><summary>What to do when the Claude usage limit is reached in Claude Code?</summary><p>You can wait for the reset (up to 5 hours for the session window, longer for the weekly limit), or use claude-auto, which moves the same Claude Code session to another Claude account you own that still has usage left and continues the task.</p></details>
+        <details><summary>How do I use Claude after reaching the limit?</summary><p>Install claude-auto, add a second Claude account with <code>claude-auto add</code>, and start Claude Code with <code>claude-auto</code>. When the limit is reached it switches accounts automatically.</p></details>
+        <details><summary>How do I use multiple Claude accounts in Claude Code?</summary><p>Each account needs its own config folder (<code>CLAUDE_CONFIG_DIR</code>). <code>claude-auto add</code> creates one that shares your history and settings, and <code>claude-auto</code> picks the account with usage left.</p></details>
+        <details><summary>How many Claude accounts can I add to claude-auto?</summary><p>There is no limit. Run <code>claude-auto add</code> for account 2, 3, 4, 5 and so on. Accounts are tried in order.</p></details>
+        <details><summary>Does switching Claude accounts lose my conversation or code progress?</summary><p>No. claude-auto resumes the same session ID, carries edit checkpoints, todos and plans, and tells Claude to check the current state of the code and continue from the next unfinished step instead of starting over.</p></details>
+        <details><summary>What happens when all Claude accounts reach the weekly limit?</summary><p>claude-auto shows when the earliest account resets, waits until then and continues the session automatically.</p></details>
+        <details><summary>How does the Claude usage limit work?</summary><p>Claude Pro and Max plans have a rolling 5-hour session limit and a weekly limit. <code>claude-auto status</code> shows the percent used and the reset time of each account.</p></details>
+      </div>
+    </div>
   </section>
 
-  <section id="languages" class="langs">
-    <h2>claude-auto in other languages</h2>
-    <p lang="ja">Claude Code の使用制限に達したら、使用量が残っている次の Claude アカウントへ自動で切り替え、同じセッションのまま作業を続けます。</p>
-    <p lang="pt-BR">Atingiu o limite de uso do Claude Code? O claude-auto troca automaticamente para a próxima conta Claude com uso disponível e continua a mesma sessão.</p>
-    <p lang="es">¿Llegaste al límite de uso de Claude Code? claude-auto cambia automáticamente a tu siguiente cuenta de Claude con uso disponible y continúa la misma sesión.</p>
-    <p lang="de">Claude Code Nutzungslimit erreicht? claude-auto wechselt automatisch zum nächsten Claude-Konto mit freiem Kontingent und setzt dieselbe Sitzung fort.</p>
-    <p lang="vi">Hết giới hạn sử dụng Claude Code? claude-auto tự động chuyển sang tài khoản Claude tiếp theo còn lượt dùng và tiếp tục cùng phiên làm việc.</p>
-    <p lang="hi">Claude Code की usage limit खत्म हो गई? claude-auto अपने आप अगले Claude account पर switch करके वही session जारी रखता है।</p>
-    <p lang="zh">Claude Code 达到使用限制?claude-auto 会自动切换到下一个仍有额度的 Claude 账号,并继续同一个会话。</p>
-    <p lang="ru">Достигнут лимит использования Claude Code? claude-auto автоматически переключается на следующий аккаунт Claude с доступным лимитом и продолжает ту же сессию.</p>
-    <p lang="tr">Claude Code kullanım limitine mi ulaştınız? claude-auto, kullanım hakkı kalan bir sonraki Claude hesabına otomatik geçer ve aynı oturuma devam eder.</p>
-    <p lang="id">Batas penggunaan Claude Code tercapai? claude-auto otomatis berpindah ke akun Claude berikutnya yang masih punya kuota dan melanjutkan sesi yang sama.</p>
-    <p lang="ar" dir="rtl">وصلت إلى حد استخدام Claude Code؟ ينتقل claude-auto تلقائيا إلى حساب Claude التالي الذي لا يزال لديه استخدام متاح ويكمل نفس الجلسة.</p>
+  <section id="languages" class="alt">
+    <div class="wrap">
+      <div class="eyebrow">Worldwide</div>
+      <h2>claude-auto in other languages</h2>
+      <p class="sub">The same tool, described for Claude Code users around the world.</p>
+      <div class="langs">
+        <div class="lang" lang="ja"><b>Japanese</b>Claude Code の使用制限に達したら、使用量が残っている次の Claude アカウントへ自動で切り替え、同じセッションのまま作業を続けます。</div>
+        <div class="lang" lang="pt-BR"><b>Portuguese</b>Atingiu o limite de uso do Claude Code? O claude-auto troca automaticamente para a próxima conta Claude com uso disponível e continua a mesma sessão.</div>
+        <div class="lang" lang="es"><b>Spanish</b>¿Llegaste al límite de uso de Claude Code? claude-auto cambia automáticamente a tu siguiente cuenta de Claude con uso disponible y continúa la misma sesión.</div>
+        <div class="lang" lang="de"><b>German</b>Claude Code Nutzungslimit erreicht? claude-auto wechselt automatisch zum nächsten Claude-Konto mit freiem Kontingent und setzt dieselbe Sitzung fort.</div>
+        <div class="lang" lang="vi"><b>Vietnamese</b>Hết giới hạn sử dụng Claude Code? claude-auto tự động chuyển sang tài khoản Claude tiếp theo còn lượt dùng và tiếp tục cùng phiên làm việc.</div>
+        <div class="lang" lang="hi"><b>Hindi</b>Claude Code की usage limit खत्म हो गई? claude-auto अपने आप अगले Claude account पर switch करके वही session जारी रखता है।</div>
+        <div class="lang" lang="zh"><b>Chinese</b>Claude Code 达到使用限制?claude-auto 会自动切换到下一个仍有额度的 Claude 账号,并继续同一个会话。</div>
+        <div class="lang" lang="ru"><b>Russian</b>Достигнут лимит использования Claude Code? claude-auto автоматически переключается на следующий аккаунт Claude с доступным лимитом и продолжает ту же сессию.</div>
+        <div class="lang" lang="tr"><b>Turkish</b>Claude Code kullanım limitine mi ulaştınız? claude-auto, kullanım hakkı kalan bir sonraki Claude hesabına otomatik geçer ve aynı oturuma devam eder.</div>
+        <div class="lang" lang="id"><b>Indonesian</b>Batas penggunaan Claude Code tercapai? claude-auto otomatis berpindah ke akun Claude berikutnya yang masih punya kuota dan melanjutkan sesi yang sama.</div>
+        <div class="lang" lang="ar" dir="rtl"><b>Arabic</b>وصلت إلى حد استخدام Claude Code؟ ينتقل claude-auto تلقائيا إلى حساب Claude التالي الذي لا يزال لديه استخدام متاح ويكمل نفس الجلسة.</div>
+        <div class="lang" lang="ur"><b>Urdu</b>Claude Code ki usage limit khatam? claude-auto khud agle Claude account par switch kar ke wohi session jaari rakhta hai.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2>Never lose a session to the limit again.</h2>
+      <p>One command to install. Free and open source under the MIT license.</p>
+      <div class="install">
+        <code><span class="p">$ </span>curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash</code>
+        <button class="btn btn-primary copy" type="button" data-copy="curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash"><i class="fa-regular fa-copy"></i>Copy</button>
+      </div>
+    </div>
   </section>
 </main>
 
-<footer class="wrap">
-  <div class="contact">
-    <span>Built by <a href="https://rameezscripts.com">Mohammad Rameez Imdad (Rameez Scripts)</a></span>
-    <a href="https://www.youtube.com/@rameezimdad">YouTube</a>
-    <a href="https://wa.me/923435347417" target="_blank" rel="noopener">WhatsApp</a>
-    <a href="mailto:Contact@rameezscripts.com">Contact@rameezscripts.com</a>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top" style="color:var(--text)"><i class="fa-solid fa-terminal"></i>claude-auto</a>
+        <p style="color:var(--muted);margin:8px 0 0">Built by Mohammad Rameez Imdad (<a href="https://rameezscripts.com" style="display:inline;color:var(--blue)">Rameez Scripts</a>). AI automation, ERP, CRM and Claude Code tools.</p>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <a href="https://github.com/rameezimdad/claude-auto-switch"><i class="fa-brands fa-github"></i>GitHub repository</a>
+        <a href="https://github.com/rameezimdad/claude-auto-switch/releases"><i class="fa-solid fa-tag"></i>Releases</a>
+        <a href="https://www.youtube.com/@rameezimdad"><i class="fa-brands fa-youtube"></i>YouTube</a>
+      </div>
+      <div>
+        <h4>Let's Work Together</h4>
+        <a href="https://wa.me/923435347417" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i>WhatsApp</a>
+        <a href="mailto:Contact@rameezscripts.com"><i class="fa-solid fa-envelope"></i>Contact@rameezscripts.com</a>
+      </div>
+    </div>
+    <div class="legal">claude-auto is an independent open-source project and is not affiliated with or endorsed by Anthropic. Claude and Claude Code are trademarks of Anthropic.</div>
   </div>
-  <p>claude-auto is an independent open-source project and is not affiliated with or endorsed by Anthropic. Claude and Claude Code are trademarks of Anthropic.</p>
 </footer>
+
 <script>
-document.getElementById('copy').addEventListener('click', function () {
-  var b = this;
-  navigator.clipboard.writeText(document.getElementById('cmd').textContent).then(function () {
-    b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+// copy buttons
+document.querySelectorAll('[data-copy]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var html = b.innerHTML;
+    navigator.clipboard.writeText(b.dataset.copy).then(function () {
+      b.innerHTML = '<i class="fa-solid fa-check"></i>Copied';
+      setTimeout(function () { b.innerHTML = html; }, 1500);
+    });
   });
 });
+// theme toggle
+document.getElementById('themeBtn').addEventListener('click', function () {
+  var r = document.documentElement, cur = r.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  var next = cur === 'dark' ? 'light' : 'dark';
+  r.setAttribute('data-theme', next);
+  try { localStorage.setItem('ca-theme', next); } catch (e) {}
+});
+// mobile menu
+var mb = document.getElementById('menuBtn'), nl = document.getElementById('navLinks');
+mb.addEventListener('click', function () { var o = nl.classList.toggle('open'); mb.setAttribute('aria-expanded', o); });
+nl.addEventListener('click', function (e) { if (e.target.tagName === 'A') { nl.classList.remove('open'); mb.setAttribute('aria-expanded', false); } });
+// terminal demo
+(function () {
+  var m = function (p, full) { return '<span class="meter"><i class="' + (full ? 'full' : '') + '" style="width:' + p + '%"></i></span>'; };
+  var lines = [
+    '<span class="c-p">$</span> claude-auto',
+    '<span class="c-m">checking accounts...</span>',
+    'account 1 ' + m(41) + '41% used',
+    '<span class="c-ok">using account 1</span>',
+    '<span class="c-m">... building your feature, step 3 of 6 ...</span>',
+    '<span class="c-b">usage limit reached on account 1</span>',
+    'account 1 ' + m(100, 1) + '<span class="c-b">100% used</span>',
+    'account 2 ' + m(12) + '<span class="c-hl">12% used</span>',
+    '<span class="c-w">switching to account 2...</span>',
+    '<span class="c-ok">resumed the same session</span>',
+    '<span class="c-m">steps 1-3 done, continuing at step 4</span>',
+    '<span class="c-p">&gt;</span> <span class="cursor"></span>'
+  ];
+  var t = document.getElementById('term');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function run() {
+    t.innerHTML = lines.map(function (l) { return '<div class="l">' + l + '</div>'; }).join('');
+    var els = t.querySelectorAll('.l');
+    if (reduce) { els.forEach(function (e) { e.classList.add('on'); }); return; }
+    els.forEach(function (e, i) { setTimeout(function () { e.classList.add('on'); }, 400 + i * 650); });
+    setTimeout(run, 400 + lines.length * 650 + 4000);
+  }
+  run();
+})();
 </script>
 </body>
 </html>
