@@ -32,7 +32,7 @@ if [ ! -f "$CONF" ]; then
 fi
 
 # StopFailure(rate_limit) hook in every account's settings.json
-HOOK="$DEST/hooks/auto_switch.sh" CONF="$CONF" python3 - <<'EOF'
+HOOK="$DEST/hooks/auto_switch.sh" SL="$DEST/lib/statusline.py" CONF="$CONF" python3 - <<'EOF'
 import json, os
 hook, seen = os.environ['HOOK'], set()
 dirs = [l.strip() for l in open(os.environ['CONF']) if l.strip() and not l.startswith('#')]
@@ -44,12 +44,17 @@ for d in dirs:
     try: s = json.load(open(p))
     except FileNotFoundError: s = {}
     except Exception: print('  skipped (not valid JSON):', p); continue
+    changed = False
     lst = s.setdefault('hooks', {}).setdefault('StopFailure', [])
-    if any('auto_switch.sh' in h.get('command', '') for e in lst for h in e.get('hooks', [])):
-        continue
-    lst.append({'matcher': 'rate_limit', 'hooks': [{'type': 'command', 'command': hook, 'timeout': 30}]})
-    json.dump(s, open(p, 'w'), indent=2); open(p, 'a').write('\n')
-    print('  hook added:', p)
+    if not any('auto_switch.sh' in h.get('command', '') for e in lst for h in e.get('hooks', [])):
+        lst.append({'matcher': 'rate_limit', 'hooks': [{'type': 'command', 'command': hook, 'timeout': 30}]})
+        changed = True; print('  hook added:', p)
+    # account status line, only when none is set (an existing one is kept)
+    if not s.get('statusLine'):
+        s['statusLine'] = {'type': 'command', 'command': 'python3 ' + os.environ['SL']}
+        changed = True; print('  status line added:', p)
+    if changed:
+        json.dump(s, open(p, 'w'), indent=2); open(p, 'a').write('\n')
 EOF
 
 echo

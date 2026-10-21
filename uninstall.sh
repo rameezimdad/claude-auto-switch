@@ -17,6 +17,7 @@ for d in [l.strip() for l in open(os.environ['CONF']) if l.strip() and not l.sta
     if lst: h['StopFailure'] = lst
     else: h.pop('StopFailure', None)
     if not h: s.pop('hooks', None)
+    if 'claude-auto/lib/statusline.py' in (s.get('statusLine') or {}).get('command', ''): s.pop('statusLine')
     json.dump(s, open(p, 'w'), indent=2); open(p, 'a').write('\n')
     print('  hook removed:', p)
 EOF

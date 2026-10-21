@@ -13,6 +13,14 @@ SHARE=(projects settings.json settings.local.json CLAUDE.md skills plugins agent
 
 accts() { [ -f "$CONF" ] && sed -e 's/#.*//' -e "s|^~|$HOME|" -e '/^\s*$/d' "$CONF" || echo "$MAIN"; }
 name() { [ "$1" = "$MAIN" ] && echo "account 1 (~/.claude)" || echo "${1/#$HOME/\~}"; }
+# logged-in email of an account (default dir keeps it in ~/.claude.json)
+email() {
+  local f="$1/.claude.json"; [ "$1" = "$MAIN" ] && f="$HOME/.claude.json"
+  python3 -c 'import json,sys
+try: print(json.load(open(sys.argv[1])).get("oauthAccount",{}).get("emailAddress",""))
+except Exception: pass' "$f"
+}
+label() { local e; e=$(email "$1"); echo "$(name "$1")${e:+ <$e>}"; }
 usage() { python3 "$USAGE" "$1"; }
 
 cmd_status() {
@@ -20,9 +28,9 @@ cmd_status() {
   for a in $(accts); do
     read -r pct reset < <(usage "$a")
     case "$pct" in
-      NOLOGIN) printf '%-32s not logged in\n' "$(name "$a")" ;;
-      UNKNOWN) printf '%-32s usage unknown (token expired or offline)\n' "$(name "$a")" ;;
-      *) printf '%-32s %3s%% used%s\n' "$(name "$a")" "$pct" \
+      NOLOGIN) printf '%-58s not logged in\n' "$(label "$a")" ;;
+      UNKNOWN) printf '%-58s usage unknown (token expired or offline)\n' "$(label "$a")" ;;
+      *) printf '%-58s %3s%% used%s\n' "$(label "$a")" "$pct" \
            "$([ "$reset" -gt 0 ] && echo ", resets $(python3 -c "import time;print(time.strftime('%a %H:%M',time.localtime($reset)))")")" ;;
     esac
   done
@@ -159,7 +167,7 @@ while :; do
     sleep $(( secs > 60 ? secs : 60 ))
     pick ""; cur=$PICK; [ -n "$prev" ] && [ -n "$cur" ] && carry "$prev" "$cur" "$sid"; continue
   fi
-  echo "claude-auto: using $(name "$cur")" >&2
+  echo "claude-auto: using $(label "$cur")" >&2
   rm -f "$CLAUDE_AUTO_FLAG"
   run "$cur" "${args[@]}"
   [ -s "$CLAUDE_AUTO_FLAG" ] || exit 0   # normal exit

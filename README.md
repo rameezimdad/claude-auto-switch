@@ -89,6 +89,7 @@ Claude Code reopens **the same conversation** on account 2 and continues the tas
 | **Continues, never restarts** | Checks what is already done in your code and picks up at the next unfinished step |
 | **No false switches** | Ignores short 429 bursts while your plan still has room |
 | **Waits for reset** | If every account is full, waits for the earliest reset, then continues |
+| **See which account is running** | Status line shows `account 2 · you@mail.com · 12% used · Opus` at the bottom of Claude Code |
 | **Usage dashboard** | `claude-auto status` shows % used and reset time for every account |
 | **Shared setup** | Every account shares history, settings, skills, plugins and CLAUDE.md |
 | **Official hooks only** | Uses Claude Code's `StopFailure` hook. Nothing in Claude Code is patched. |
@@ -186,6 +187,23 @@ account 1 (~/.claude)             97% used, resets Thu 17:00
 ~/.claude-2                        12% used, resets Thu 21:00
 ~/.claude-3                        not logged in
 ```
+
+## See which account is running
+
+The installer adds a status line to Claude Code (only if you don't already have one), so you always know which account and email the session is on:
+
+```
+account 2 · contact@yourmail.com · 12% used · Opus 5.5
+```
+
+Usage is refreshed every 60 seconds. `claude-auto status` lists every account with its email:
+
+```
+account 1 (~/.claude) <you@gmail.com>             33% used, resets Sat 04:59
+~/.claude-2 <work@yourmail.com>                    0% used
+```
+
+Already have your own status line? Keep it, and add the account part by calling `python3 ~/.local/share/claude-auto/lib/statusline.py` from your script.
 
 ## Configuration
 
