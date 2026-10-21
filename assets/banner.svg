@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-label="claude-auto: Claude Code auto account switch at the usage limit">
+  <!-- Developed by Mohammad Rameez Imdad (Rameez Scripts) | WhatsApp: https://wa.me/923435347417 | YouTube: https://www.youtube.com/@rameezimdad -->
+  <rect width="1200" height="300" fill="#001f3f"/>
+  <rect x="0" y="292" width="1200" height="8" fill="#0074D9"/>
+  <text x="60" y="118" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="64" font-weight="700" fill="#ffffff">claude-auto</text>
+  <text x="60" y="170" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="28" fill="#cfe3f7">Claude Code usage limit reached? Your session moves to the</text>
+  <text x="60" y="208" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="28" fill="#cfe3f7">next account with usage left and keeps working.</text>
+  <g font-family="Consolas, Menlo, monospace" font-size="20">
+    <rect x="820" y="60" width="320" height="34" fill="#0b2d52"/><text x="836" y="84" fill="#ff8a80">account 1   100% used</text>
+    <rect x="820" y="104" width="320" height="34" fill="#0074D9"/><text x="836" y="128" fill="#ffffff">account 2    12% used  &lt;-</text>
+    <rect x="820" y="148" width="320" height="34" fill="#0b2d52"/><text x="836" y="172" fill="#cfe3f7">account 3    40% used</text>
+  </g>
+  <text x="60" y="262" font-family="Consolas, Menlo, monospace" font-size="20" fill="#7fb8ee">curl -fsSL .../install.sh | bash</text>
+</svg>

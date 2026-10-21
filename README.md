@@ -1,101 +1,174 @@
-# Claude Code Auto Account Switch - Never Stop at the Usage Limit
-
 <!--
 Developed by Mohammad Rameez Imdad (Rameez Scripts)
 WhatsApp: https://wa.me/923435347417 (For Custom Projects)
 YouTube: https://www.youtube.com/@rameezimdad (Subscribe for more!)
 -->
 
-**claude-auto** runs Claude Code across several Claude accounts (Pro / Max). When the account you are on hits its usage limit, it checks which of your other accounts still has usage left, moves **the same session** to that account and tells Claude to continue where it stopped. You don't need to copy context or start a new chat.
+<p align="center">
+  <img src="assets/banner.svg" alt="claude-auto - Claude Code auto account switcher when the usage limit is reached" width="100%">
+</p>
 
-![Shell](https://img.shields.io/badge/shell-bash-blue) ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20WSL%20%7C%20macOS-lightgrey) ![License](https://img.shields.io/badge/license-MIT-green)
+<h1 align="center">Claude Code Usage Limit Reached? Auto Switch to Your Next Claude Account</h1>
+
+<p align="center">
+  <b>claude-auto</b> is a free, open-source <b>Claude account switcher</b> for <b>Claude Code</b>.<br>
+  When one account hits its <b>5-hour or weekly limit</b>, the <b>same session</b> continues on your next Claude account that still has usage left.
+</p>
+
+<p align="center">
+  <a href="https://github.com/rameezimdad/claude-auto-switch/stargazers"><img src="https://img.shields.io/github/stars/rameezimdad/claude-auto-switch?style=flat&color=0074D9" alt="GitHub stars"></a>
+  <img src="https://img.shields.io/badge/Claude%20Code-compatible-001f3f" alt="Claude Code compatible">
+  <img src="https://img.shields.io/badge/Linux%20%7C%20WSL%20%7C%20macOS-supported-0074D9" alt="Linux, WSL and macOS">
+  <img src="https://img.shields.io/badge/install-one%20line-001f3f" alt="One-line install">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-0074D9" alt="MIT license"></a>
+</p>
+
+<p align="center">
+  <a href="#quick-start">Quick start</a> &middot;
+  <a href="#how-it-works">How it works</a> &middot;
+  <a href="#commands">Commands</a> &middot;
+  <a href="#faq">FAQ</a> &middot;
+  <a href="#other-languages">Other languages</a>
+</p>
+
+---
+
+## The problem
+
+You are in the middle of a task in Claude Code and this appears:
+
+```
+Claude usage limit reached. Your limit will reset at 5:00 PM.
+```
+
+The session stops. You open a second account, start a new chat, explain the task again, and lose time and context.
+
+## The fix
+
+```
+$ claude-auto
+claude-auto: checking accounts...
+  account 1 (~/.claude): 41% used
+claude-auto: using account 1 (~/.claude)
+
+  ... you work for hours, the limit hits ...
+
+claude-auto: account 1 (~/.claude) hit its usage limit. Switching...
+  ~/.claude-2: 12% used
+claude-auto: using ~/.claude-2
+```
+
+Claude Code reopens **the same conversation** on account 2 and continues the task where it stopped. You don't need to copy context or start a new chat.
 
 ## Features
 
-- Automatic account switching when the Claude Code usage limit is reached
-- Checks each account's real usage (5-hour and weekly windows) **before** switching to it
-- Resumes the same conversation (`--resume`) on the new account and keeps working
-- Ignores short 429 bursts while your plan still has room
-- Waits for the earliest reset when every account is full, then continues on its own
-- `claude-auto status` shows the usage and reset time of every account
-- `claude-auto add <n>` creates a new account folder that shares history, settings, skills, plugins and CLAUDE.md
-- Uses the official `StopFailure` hook. It does not patch Claude Code.
-- Works on Linux, WSL and macOS
+| | |
+|---|---|
+| **Automatic account switching** | Moves to the next Claude account as soon as the usage limit is reached |
+| **Checks usage first** | Reads each account's real 5-hour and weekly usage before it switches |
+| **Same session, full context** | Resumes the same session ID, so the new account sees the whole conversation |
+| **No false switches** | Ignores short 429 bursts while your plan still has room |
+| **Waits for reset** | If every account is full, waits for the earliest reset, then continues |
+| **Usage dashboard** | `claude-auto status` shows % used and reset time for every account |
+| **Shared setup** | Every account shares history, settings, skills, plugins and CLAUDE.md |
+| **Official hooks only** | Uses Claude Code's `StopFailure` hook. Nothing in Claude Code is patched. |
+| **Any number of accounts** | 2, 3 or more Claude Pro / Max accounts |
+| **Cross-platform** | Linux, Windows (WSL) and macOS |
 
-## Install
+## Quick start
+
+**1. Install** (needs Claude Code, `bash`, `python3`, `curl`)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash
 ```
 
-Requirements: Claude Code, `bash`, `python3`, `curl`.
+**2. Add your other Claude accounts**
 
-The installer:
-1. copies the scripts to `~/.local/share/claude-auto` and links `claude-auto` into `~/.local/bin`
-2. writes the accounts list to `~/.config/claude-auto/accounts` (`~/.claude` plus any `~/.claude-<n>` folders it finds)
-3. adds a `StopFailure` hook (matcher `rate_limit`) to each account's `settings.json`
-
-## Set up your accounts
-
-Your normal Claude Code login (`~/.claude`) is account 1. Add more:
+Your normal Claude Code login (`~/.claude`) is account 1.
 
 ```bash
 claude-auto add 2
-CLAUDE_CONFIG_DIR=~/.claude-2 claude      # type /login, sign in with your second account, then /exit
+CLAUDE_CONFIG_DIR=~/.claude-2 claude     # type /login, sign in with account 2, then /exit
 
 claude-auto add 3
-CLAUDE_CONFIG_DIR=~/.claude-3 claude      # /login with the third account
+CLAUDE_CONFIG_DIR=~/.claude-3 claude     # /login with account 3
 ```
 
-`add` links the new folder's `projects`, `settings.json`, `CLAUDE.md`, `skills`, `plugins`, `agents` and `commands` to `~/.claude`, so each account sees the same history and setup. Only the login is separate.
-
-Check them:
-
-```bash
-claude-auto status
-```
-```
-account 1 (~/.claude)             97% used, resets Thu 05:00
-~/.claude-2                        12% used, resets Thu 09:00
-~/.claude-3                        not logged in
-```
-
-## Use
-
-Start Claude Code with `claude-auto` instead of `claude`. Every `claude` flag still works:
+**3. Work as usual**
 
 ```bash
 claude-auto
-claude-auto -c                 # continue the last session
-claude-auto --resume <id>
 ```
 
-To switch earlier, for example at 90% used:
+Every Claude Code flag works the same way, for example `claude-auto -c`, `claude-auto --resume <id>` or `claude-auto -p "..."`.
 
-```bash
-CLAUDE_AUTO_MAX=90 claude-auto
-```
-
-Tip: `alias claude=claude-auto` in your shell profile makes it the default.
+> Tip: add `alias claude=claude-auto` to your `~/.bashrc` or `~/.zshrc` so every session is protected.
 
 ## How it works
 
-```
-claude-auto ── picks the first account under the limit ──> claude (account 1)
-                                                               │
-                                     usage limit error (rate_limit)
-                                                               │
-                         StopFailure hook: checks account 1's usage
-                         full? save session id, close claude
-                                                               │
-claude-auto ── checks accounts 2, 3 ... ── first one with room ─┘
-            └─> claude --resume <same session> "continue where you left off"
+```mermaid
+flowchart LR
+    A[claude-auto] -->|picks first account under the limit| B[Claude Code<br/>account 1]
+    B -->|usage limit error| C{StopFailure hook<br/>checks real usage}
+    C -->|still has room| B
+    C -->|account full| D[save session id<br/>close Claude Code]
+    D --> E{next account<br/>with usage left?}
+    E -->|yes| F[claude --resume<br/>same session on account 2]
+    E -->|all full| G[wait for the<br/>earliest reset]
+    G --> E
 ```
 
-- The usage check reads each account's OAuth token, from `.credentials.json` on Linux/WSL or the Keychain on macOS, and asks the same usage endpoint that `/usage` uses.
-- An account that is not logged in is skipped. If the token has expired, the account is tried last, because Claude Code refreshes the token when it starts.
-- If an account does not share `projects/`, the session transcript is copied to it before resuming.
-- The hook does nothing unless Claude Code was started by `claude-auto`, so plain `claude` sessions behave as before.
+1. `claude-auto` checks the usage of each account in your list and starts Claude Code on the first one with room.
+2. When a turn fails with a `rate_limit` error, the `StopFailure` hook asks that account's usage endpoint (the same data `/usage` shows) whether the plan is really full.
+3. If it is full, the hook saves the session ID and closes Claude Code. If it isn't, nothing happens.
+4. `claude-auto` checks the remaining accounts and reopens the same session on the first one with usage left, with the message *"continue the task exactly where you left off"*.
+
+Accounts that are not logged in are skipped. If an account's token has expired, it is tried last, because Claude Code refreshes the token on start.
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `claude-auto` | Start Claude Code with auto switching (all `claude` flags pass through) |
+| `claude-auto status` | Usage % and reset time of every account |
+| `claude-auto add <n>` | Create `~/.claude-<n>` as a new account that shares your history and settings |
+| `claude-auto accounts` | List accounts in the order they are tried |
+| `claude-auto help` | Show help |
+
+```
+$ claude-auto status
+account 1 (~/.claude)             97% used, resets Thu 17:00
+~/.claude-2                        12% used, resets Thu 21:00
+~/.claude-3                        not logged in
+```
+
+## Configuration
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `~/.config/claude-auto/accounts` | `~/.claude` + any `~/.claude-<n>` | One config folder per line, tried top to bottom |
+| `CLAUDE_AUTO_MAX` | `95` | Treat an account as full at this % used, for example `CLAUDE_AUTO_MAX=90 claude-auto` |
+| `CLAUDE_AUTO_HOME` | `~/.local/share/claude-auto` | Install folder |
+
+## Platform support
+
+| Platform | Status | Login is read from |
+|---|---|---|
+| Linux | Supported | `<config dir>/.credentials.json` |
+| Windows (WSL) | Supported | `<config dir>/.credentials.json` |
+| macOS | Supported | Keychain (`Claude Code-credentials`) |
+| Windows (native PowerShell) | Not yet | Use WSL |
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `claude-auto: command not found` | Add `export PATH="$HOME/.local/bin:$PATH"` to your shell profile |
+| An account shows `not logged in` | Run `CLAUDE_CONFIG_DIR=~/.claude-<n> claude`, then `/login` |
+| An account shows `usage unknown` | The token expired or you are offline. It is still tried, and Claude Code refreshes the token on start. |
+| No switch happened | Start with `claude-auto`, not `claude`. The hook only acts on sessions started by `claude-auto`. |
+| The new account has no history | Create account folders with `claude-auto add <n>` so `projects/` is shared. Otherwise the session is copied over. |
 
 ## Uninstall
 
@@ -103,37 +176,109 @@ claude-auto ── checks accounts 2, 3 ... ── first one with room ─┘
 bash ~/.local/share/claude-auto/uninstall.sh
 ```
 
-This removes the scripts and the hook. Your account folders and logins stay.
+This removes the scripts and the hook. Your account folders and logins are kept.
 
 ## FAQ
 
-**How do I use multiple Claude accounts in Claude Code?**
-Each account needs its own config folder (`CLAUDE_CONFIG_DIR`). `claude-auto add <n>` creates one, and `claude-auto` picks between them.
+<details>
+<summary><b>What to do when the Claude usage limit is reached in Claude Code?</b></summary>
 
-**What happens when the Claude Code usage limit is reached?**
-Normally the session stops until the limit resets. With claude-auto, the session closes, reopens on another account with usage left and continues the same task.
+Normally you wait for the reset, which can take up to 5 hours for the session window or longer for the weekly limit. With claude-auto, the session continues on another Claude account you own that still has usage left, without losing context.
+</details>
 
-**Does it lose my conversation or context?**
-No. It resumes the same session ID, so the new account loads the full conversation.
+<details>
+<summary><b>How do I use Claude after reaching the limit?</b></summary>
 
-**What if all my accounts are out of usage?**
-It shows when the earliest account resets, waits until then and continues on that account.
+Install claude-auto, add a second Claude account with `claude-auto add 2`, and start Claude Code with `claude-auto`. When the limit is reached, it switches for you.
+</details>
 
-**Does it work with Claude Pro and Claude Max?**
-Yes. It works with any subscription login. Accounts that use an API key have no plan usage to check, so they are skipped.
+<details>
+<summary><b>How do I use multiple Claude accounts in Claude Code?</b></summary>
 
-**Is this allowed?**
-It only uses accounts you own and log into yourself. Check the Claude terms that apply to your plans.
+Each account needs its own config folder (`CLAUDE_CONFIG_DIR`). `claude-auto add <n>` creates one that shares your history and settings, and `claude-auto` picks the account with usage left.
+</details>
+
+<details>
+<summary><b>How does the Claude usage limit work?</b></summary>
+
+Claude Pro and Max plans have a rolling 5-hour session limit and a weekly limit. `claude-auto status` shows the % used and the reset time of both for every account.
+</details>
+
+<details>
+<summary><b>Does switching lose my conversation or context?</b></summary>
+
+No. The same session ID is resumed, so the new account loads the full conversation, including files, plans and tool results.
+</details>
+
+<details>
+<summary><b>What happens when all my accounts reach the weekly limit?</b></summary>
+
+claude-auto shows when the earliest account resets, waits until then and continues automatically.
+</details>
+
+<details>
+<summary><b>Does it work with Claude Pro, Claude Max and API keys?</b></summary>
+
+It works with any Claude subscription login (Pro, Max, Team). An account that uses an API key has no plan usage to check, so it is skipped.
+</details>
+
+<details>
+<summary><b>Does it modify Claude Code?</b></summary>
+
+No. It is a small bash wrapper plus one official `StopFailure` hook in `settings.json`. Plain `claude` sessions behave exactly as before.
+</details>
+
+<details>
+<summary><b>Is it allowed to use several Claude accounts?</b></summary>
+
+claude-auto only uses accounts you own and log into yourself. Read the Anthropic terms that apply to your plans before you use it.
+</details>
+
+## Other languages
+
+**Japanese** - Claude Code の使用制限 (usage limit) に達したら、使用量が残っている次の Claude アカウントへ自動で切り替え、同じセッションのまま作業を続けます。
+
+**Portuguese (BR)** - Atingiu o limite de uso do Claude Code? O claude-auto troca automaticamente para a próxima conta Claude com uso disponível e continua a mesma sessão.
+
+**Spanish** - ¿Llegaste al límite de uso de Claude Code? claude-auto cambia automáticamente a tu siguiente cuenta de Claude con uso disponible y continúa la misma sesión.
+
+**German** - Claude Code Nutzungslimit erreicht? claude-auto wechselt automatisch zum nächsten Claude-Konto mit freiem Kontingent und setzt dieselbe Sitzung fort.
+
+**Vietnamese** - Hết giới hạn sử dụng Claude Code? claude-auto tự động chuyển sang tài khoản Claude tiếp theo còn lượt dùng và tiếp tục cùng phiên làm việc.
+
+**Hindi** - Claude Code की usage limit खत्म हो गई? claude-auto अपने आप अगले Claude account पर switch करके वही session जारी रखता है।
+
+**Urdu** - Claude Code ki usage limit khatam? claude-auto khud agle Claude account par switch kar ke wohi session jaari rakhta hai.
+
+**Chinese** - Claude Code 达到使用限制?claude-auto 会自动切换到下一个仍有额度的 Claude 账号,并继续同一个会话。
+
+**Russian** - Достигнут лимит использования Claude Code? claude-auto автоматически переключается на следующий аккаунт Claude с доступным лимитом и продолжает ту же сессию.
+
+**Turkish** - Claude Code kullanım limitine mi ulaştınız? claude-auto, kullanım hakkı kalan bir sonraki Claude hesabına otomatik geçer ve aynı oturuma devam eder.
+
+**Indonesian** - Batas penggunaan Claude Code tercapai? claude-auto otomatis berpindah ke akun Claude berikutnya yang masih punya kuota dan melanjutkan sesi yang sama.
+
+**Arabic** - وصلت إلى حد استخدام Claude Code؟ ينتقل claude-auto تلقائيا إلى حساب Claude التالي الذي لا يزال لديه استخدام متاح ويكمل نفس الجلسة.
+
+## Keywords
+
+Claude Code usage limit, Claude limit reached, Claude usage limits, Claude weekly limit, Claude 5 hour limit, Claude multiple accounts, Claude account switcher, Claude auto switch, Claude multi account, Claude Code rate limit, Claude Pro limit, Claude Max limit, use Claude after reaching limit, Claude Code hooks, StopFailure hook.
 
 ## Author
 
-Developed by **Mohammad Rameez Imdad (Rameez Scripts)**
+Built by **Mohammad Rameez Imdad ([Rameez Scripts](https://rameezscripts.com))**. I make AI automation, ERP, CRM and Claude Code tools.
 
-- YouTube: https://www.youtube.com/@rameezimdad
-- WhatsApp: https://wa.me/923435347417 (custom projects)
-- Email: Contact@rameezscripts.com
-- Website: https://rameezscripts.com
+| | |
+|---|---|
+| YouTube | [@rameezimdad](https://www.youtube.com/@rameezimdad) |
+| WhatsApp (custom projects) | [wa.me/923435347417](https://wa.me/923435347417) |
+| Email | [Contact@rameezscripts.com](mailto:Contact@rameezscripts.com) |
+| Website | [rameezscripts.com](https://rameezscripts.com) |
+
+If claude-auto saved your session, **give it a star**. That helps other Claude Code users find it.
 
 ## License
 
-MIT
+[MIT](LICENSE) - free for personal and commercial use.
+
+<sub>claude-auto is an independent open-source project and is not affiliated with or endorsed by Anthropic. Claude and Claude Code are trademarks of Anthropic.</sub>
