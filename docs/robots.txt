@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rameezimdad.github.io/claude-auto-switch/sitemap.xml

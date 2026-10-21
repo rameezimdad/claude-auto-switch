@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<!--
+Developed by Mohammad Rameez Imdad (Rameez Scripts)
+WhatsApp: https://wa.me/923435347417 (For Custom Projects)
+YouTube: https://www.youtube.com/@rameezimdad (Subscribe for more!)
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Limit Reached? Auto Switch Accounts | claude-auto</title>
+<meta name="description" content="Claude Code usage limit reached? claude-auto switches to your next Claude account with usage left and continues the same session. Free, open source, one-line install.">
+<meta name="keywords" content="Claude Code usage limit, Claude limit reached, Claude multiple accounts, Claude account switcher, Claude weekly limit, Claude 5 hour limit, Claude auto switch">
+<meta name="author" content="Mohammad Rameez Imdad (Rameez Scripts)">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://rameezimdad.github.io/claude-auto-switch/">
+<meta name="theme-color" content="#001f3f">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="claude-auto">
+<meta property="og:title" content="Claude Limit Reached? Keep Working with claude-auto">
+<meta property="og:description" content="When one Claude account hits its usage limit, the same Claude Code session continues on your next account with usage left.">
+<meta property="og:url" content="https://rameezimdad.github.io/claude-auto-switch/">
+<meta property="og:image" content="https://rameezimdad.github.io/claude-auto-switch/og.png">
+<meta property="og:image:width" content="1600">
+<meta property="og:image:height" content="900">
+<meta property="og:image:alt" content="claude-auto switching from a full Claude account to the next account with usage left">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Limit Reached? Keep Working with claude-auto">
+<meta name="twitter:description" content="Auto switch to your next Claude account and continue the same Claude Code session. Free and open source.">
+<meta name="twitter:image" content="https://rameezimdad.github.io/claude-auto-switch/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://rameezimdad.github.io/claude-auto-switch/#app",
+      "name": "claude-auto",
+      "alternateName": ["Claude Code Auto Account Switch", "claude-auto-switch"],
+      "description": "A free, open-source command-line tool that switches Claude Code to your next Claude account when the current account reaches its usage limit, and continues the same session from the next unfinished step.",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Command-line tool",
+      "operatingSystem": "Linux, Windows (WSL), macOS",
+      "softwareVersion": "1.0.0",
+      "license": "https://opensource.org/licenses/MIT",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "url": "https://rameezimdad.github.io/claude-auto-switch/",
+      "downloadUrl": "https://github.com/rameezimdad/claude-auto-switch",
+      "installUrl": "https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh",
+      "image": "https://rameezimdad.github.io/claude-auto-switch/og.png",
+      "featureList": [
+        "Automatic Claude account switching at the usage limit",
+        "Checks real 5-hour and weekly usage before switching",
+        "Resumes the same Claude Code session",
+        "Continues from the next unfinished step",
+        "Waits for the earliest reset when every account is full",
+        "Unlimited Claude subscriptions"
+      ],
+      "author": { "@id": "https://rameezimdad.github.io/claude-auto-switch/#author" }
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "claude-auto-switch",
+      "codeRepository": "https://github.com/rameezimdad/claude-auto-switch",
+      "programmingLanguage": ["Bash", "Python"],
+      "license": "https://opensource.org/licenses/MIT",
+      "author": { "@id": "https://rameezimdad.github.io/claude-auto-switch/#author" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://rameezimdad.github.io/claude-auto-switch/#author",
+      "name": "Mohammad Rameez Imdad",
+      "alternateName": "Rameez Scripts",
+      "url": "https://rameezscripts.com",
+      "sameAs": ["https://www.youtube.com/@rameezimdad", "https://github.com/rameezimdad"]
+    },
+    {
+      "@type": "HowTo",
+      "name": "How to keep using Claude Code after the usage limit is reached",
+      "totalTime": "PT5M",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Install claude-auto", "text": "Run: curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash" },
+        { "@type": "HowToStep", "position": 2, "name": "Add your other Claude subscriptions", "text": "Run claude-auto add once for each extra Claude account, type /login and sign in." },
+        { "@type": "HowToStep", "position": 3, "name": "Start Claude Code with claude-auto", "text": "Run claude-auto instead of claude. When an account reaches its limit, the same session continues on the next account with usage left." }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What to do when the Claude usage limit is reached in Claude Code?",
+          "acceptedAnswer": { "@type": "Answer", "text": "You can wait for the reset (up to 5 hours for the session window, longer for the weekly limit), or use claude-auto, which moves the same Claude Code session to another Claude account you own that still has usage left and continues the task." } },
+        { "@type": "Question", "name": "How do I use Claude after reaching the limit?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Install claude-auto, add a second Claude account with claude-auto add, and start Claude Code with claude-auto. When the limit is reached it switches accounts automatically." } },
+        { "@type": "Question", "name": "How do I use multiple Claude accounts in Claude Code?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Each account needs its own config folder (CLAUDE_CONFIG_DIR). claude-auto add creates one that shares your history and settings, and claude-auto picks the account with usage left." } },
+        { "@type": "Question", "name": "How many Claude accounts can I add to claude-auto?",
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no limit. Run claude-auto add for account 2, 3, 4, 5 and so on. Accounts are tried in order." } },
+        { "@type": "Question", "name": "Does switching Claude accounts lose my conversation or code progress?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. claude-auto resumes the same session ID, carries edit checkpoints, todos and plans, and tells Claude to check the current state of the code and continue from the next unfinished step instead of starting over." } },
+        { "@type": "Question", "name": "What happens when all Claude accounts reach the weekly limit?",
+          "acceptedAnswer": { "@type": "Answer", "text": "claude-auto shows when the earliest account resets, waits until then and continues the session automatically." } },
+        { "@type": "Question", "name": "How does the Claude usage limit work?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Claude Pro and Max plans have a rolling 5-hour session limit and a weekly limit. claude-auto status shows the percent used and the reset time of each account." } }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+:root{--navy:#001f3f;--blue:#0074D9;--bg:#ffffff;--bg-soft:#f5f7fa;--text:#14212e;--muted:#5a6878;--line:#e3e8ee;--code-bg:#0d1117;--code-text:#e6edf3}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#000000;--bg-soft:#0d0d0d;--text:#e8e8e8;--muted:#a0a0a0;--line:#262626}}
+:root[data-theme="dark"]{--bg:#000000;--bg-soft:#0d0d0d;--text:#e8e8e8;--muted:#a0a0a0;--line:#262626}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--blue);text-decoration:none}
+a:hover{color:var(--navy)}
+.wrap{max-width:920px;margin:0 auto;padding:0 16px}
+header.hero{background:var(--navy);color:#fff;padding:56px 0 48px}
+.hero h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:0 0 14px}
+.hero h1 span{color:#5aa9ec}
+.hero p{color:#cfe0f1;font-size:18px;margin:0 0 24px;max-width:680px}
+.install{display:flex;gap:8px;align-items:stretch;max-width:100%}
+.install code{flex:1;min-width:0;overflow-x:auto;white-space:nowrap;background:var(--code-bg);color:var(--code-text);padding:12px 14px;border-radius:8px;font:14px/1.5 Consolas,Menlo,monospace}
+.btn{border:0;border-radius:8px;padding:0 18px;min-height:44px;font:600 15px/1 inherit;cursor:pointer;background:var(--blue);color:#fff;display:inline-flex;align-items:center}
+.btn.ghost{background:transparent;border:1px solid #5aa9ec;color:#fff}
+.hero .links{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+main section{padding:40px 0;border-bottom:1px solid var(--line)}
+h2{font-size:26px;margin:0 0 16px}
+h3{font-size:18px;margin:24px 0 6px}
+.answer{background:var(--bg-soft);border-left:4px solid var(--blue);padding:16px 18px;border-radius:0 8px 8px 0}
+.answer p{margin:0}
+pre{background:var(--code-bg);color:var(--code-text);padding:16px;border-radius:8px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace}
+code{font-family:Consolas,Menlo,monospace}
+p code,td code,li code{background:var(--bg-soft);border:1px solid var(--line);padding:1px 6px;border-radius:4px;font-size:14px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--bg-soft)}
+ol li{margin-bottom:8px}
+.langs p{margin:6px 0}
+footer{padding:32px 0 48px;color:var(--muted);font-size:14px}
+footer .contact{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+@media (max-width:600px){.install{flex-direction:column}.btn{justify-content:center}}
+a,a:hover,a:focus,button{text-decoration:none}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>Claude limit reached? <span>Keep working.</span></h1>
+    <p><b>claude-auto</b> is a free, open-source tool for Claude Code. When one Claude account hits its 5-hour or weekly usage limit, it switches to your next Claude account that still has usage left and continues the <b>same session</b> from the next unfinished step.</p>
+    <div class="install">
+      <code id="cmd">curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash</code>
+      <button class="btn" id="copy" type="button" aria-label="Copy install command">Copy</button>
+    </div>
+    <div class="links">
+      <a class="btn ghost" href="https://github.com/rameezimdad/claude-auto-switch">View on GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="what">
+    <h2>What is claude-auto?</h2>
+    <div class="answer"><p>claude-auto is a command-line wrapper for Claude Code that rotates between several Claude subscriptions (Pro, Max or Team). It checks each account's real usage, and when the current account reaches its usage limit it resumes the same conversation on the next account with usage left, so your work does not stop.</p></div>
+    <h3>Key facts</h3>
+    <div class="tbl"><table>
+      <tr><th>Price</th><td>Free, MIT license</td></tr>
+      <tr><th>Works with</th><td>Claude Code on Linux, Windows (WSL) and macOS</td></tr>
+      <tr><th>Accounts</th><td>Any number of Claude Pro / Max / Team subscriptions</td></tr>
+      <tr><th>Switches when</th><td>An account reaches 95% of its 5-hour or weekly limit (configurable)</td></tr>
+      <tr><th>Keeps</th><td>The same session, full context, edit checkpoints, todos, plans and your flags</td></tr>
+      <tr><th>Install time</th><td>Under 5 minutes, one command</td></tr>
+    </table></div>
+  </section>
+
+  <section id="options">
+    <h2>What can you do when the Claude usage limit is reached?</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Option</th><th>Keeps working now</th><th>Keeps the same session</th><th>Extra cost</th></tr></thead>
+      <tbody>
+        <tr><td>Wait for the reset</td><td>No, up to 5 hours or until the weekly reset</td><td>Yes</td><td>None</td></tr>
+        <tr><td>Open another account by hand</td><td>Yes</td><td>Only if you find and resume it yourself</td><td>Another subscription</td></tr>
+        <tr><td>Switch to an API key</td><td>Yes</td><td>Yes</td><td>Pay per token</td></tr>
+        <tr><td><b>claude-auto</b></td><td><b>Yes, automatic</b></td><td><b>Yes, continues the next step</b></td><td>Only subscriptions you already have</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="install">
+    <h2>How to install and set up claude-auto</h2>
+    <ol>
+      <li><b>Install</b> (needs Claude Code, bash, python3, curl):
+<pre>curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash</pre></li>
+      <li><b>Add each extra Claude subscription.</b> Run it once per account, type <code>/login</code>, sign in, then <code>/exit</code>:
+<pre>claude-auto add      # account 2
+claude-auto add      # account 3
+claude-auto add      # account 4, 5 ... no limit</pre></li>
+      <li><b>Work as usual</b> with <code>claude-auto</code> instead of <code>claude</code>. Every Claude Code flag still works.</li>
+    </ol>
+  </section>
+
+  <section id="how">
+    <h2>How does the automatic switch work?</h2>
+    <ol>
+      <li>claude-auto starts Claude Code on the first account that is under its limit.</li>
+      <li>When a turn fails with a usage-limit error, Claude Code's official <code>StopFailure</code> hook checks that account's real usage.</li>
+      <li>If the account is full, the session is saved and Claude Code closes. A short burst of errors with usage left is ignored.</li>
+      <li>claude-auto checks the other accounts and reopens the same session on the first one with usage left, bringing checkpoints, todos and plans along.</li>
+      <li>Claude checks what is already done in your code (git status or the files it was editing) and continues from the next unfinished step. If every account is full, claude-auto waits for the earliest reset.</li>
+    </ol>
+<pre>claude-auto: ~/.claude hit its usage limit. Switching...
+  ~/.claude-2: 12% used
+claude-auto: using ~/.claude-2</pre>
+  </section>
+
+  <section id="commands">
+    <h2>claude-auto commands</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>claude-auto</code></td><td>Start Claude Code with auto switching</td></tr>
+        <tr><td><code>claude-auto status</code></td><td>Percent used and reset time of every account</td></tr>
+        <tr><td><code>claude-auto add</code></td><td>Add the next Claude subscription and log it in</td></tr>
+        <tr><td><code>claude-auto login &lt;n&gt;</code></td><td>Log in again on account n</td></tr>
+        <tr><td><code>claude-auto remove &lt;n&gt;</code></td><td>Take account n out of the rotation</td></tr>
+        <tr><td><code>claude-auto accounts</code></td><td>List accounts in the order they are tried</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="faq">
+    <h2>Frequently asked questions</h2>
+    <h3>What to do when the Claude usage limit is reached in Claude Code?</h3>
+    <p>You can wait for the reset (up to 5 hours for the session window, longer for the weekly limit), or use claude-auto, which moves the same Claude Code session to another Claude account you own that still has usage left and continues the task.</p>
+    <h3>How do I use Claude after reaching the limit?</h3>
+    <p>Install claude-auto, add a second Claude account with <code>claude-auto add</code>, and start Claude Code with <code>claude-auto</code>. When the limit is reached it switches accounts automatically.</p>
+    <h3>How do I use multiple Claude accounts in Claude Code?</h3>
+    <p>Each account needs its own config folder (<code>CLAUDE_CONFIG_DIR</code>). <code>claude-auto add</code> creates one that shares your history and settings, and <code>claude-auto</code> picks the account with usage left.</p>
+    <h3>How many Claude accounts can I add to claude-auto?</h3>
+    <p>There is no limit. Run <code>claude-auto add</code> for account 2, 3, 4, 5 and so on. Accounts are tried in order.</p>
+    <h3>Does switching Claude accounts lose my conversation or code progress?</h3>
+    <p>No. claude-auto resumes the same session ID, carries edit checkpoints, todos and plans, and tells Claude to check the current state of the code and continue from the next unfinished step instead of starting over.</p>
+    <h3>What happens when all Claude accounts reach the weekly limit?</h3>
+    <p>claude-auto shows when the earliest account resets, waits until then and continues the session automatically.</p>
+    <h3>How does the Claude usage limit work?</h3>
+    <p>Claude Pro and Max plans have a rolling 5-hour session limit and a weekly limit. <code>claude-auto status</code> shows the percent used and the reset time of each account.</p>
+  </section>
+
+  <section id="languages" class="langs">
+    <h2>claude-auto in other languages</h2>
+    <p lang="ja">Claude Code の使用制限に達したら、使用量が残っている次の Claude アカウントへ自動で切り替え、同じセッションのまま作業を続けます。</p>
+    <p lang="pt-BR">Atingiu o limite de uso do Claude Code? O claude-auto troca automaticamente para a próxima conta Claude com uso disponível e continua a mesma sessão.</p>
+    <p lang="es">¿Llegaste al límite de uso de Claude Code? claude-auto cambia automáticamente a tu siguiente cuenta de Claude con uso disponible y continúa la misma sesión.</p>
+    <p lang="de">Claude Code Nutzungslimit erreicht? claude-auto wechselt automatisch zum nächsten Claude-Konto mit freiem Kontingent und setzt dieselbe Sitzung fort.</p>
+    <p lang="vi">Hết giới hạn sử dụng Claude Code? claude-auto tự động chuyển sang tài khoản Claude tiếp theo còn lượt dùng và tiếp tục cùng phiên làm việc.</p>
+    <p lang="hi">Claude Code की usage limit खत्म हो गई? claude-auto अपने आप अगले Claude account पर switch करके वही session जारी रखता है।</p>
+    <p lang="zh">Claude Code 达到使用限制?claude-auto 会自动切换到下一个仍有额度的 Claude 账号,并继续同一个会话。</p>
+    <p lang="ru">Достигнут лимит использования Claude Code? claude-auto автоматически переключается на следующий аккаунт Claude с доступным лимитом и продолжает ту же сессию.</p>
+    <p lang="tr">Claude Code kullanım limitine mi ulaştınız? claude-auto, kullanım hakkı kalan bir sonraki Claude hesabına otomatik geçer ve aynı oturuma devam eder.</p>
+    <p lang="id">Batas penggunaan Claude Code tercapai? claude-auto otomatis berpindah ke akun Claude berikutnya yang masih punya kuota dan melanjutkan sesi yang sama.</p>
+    <p lang="ar" dir="rtl">وصلت إلى حد استخدام Claude Code؟ ينتقل claude-auto تلقائيا إلى حساب Claude التالي الذي لا يزال لديه استخدام متاح ويكمل نفس الجلسة.</p>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="contact">
+    <span>Built by <a href="https://rameezscripts.com">Mohammad Rameez Imdad (Rameez Scripts)</a></span>
+    <a href="https://www.youtube.com/@rameezimdad">YouTube</a>
+    <a href="https://wa.me/923435347417" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="mailto:Contact@rameezscripts.com">Contact@rameezscripts.com</a>
+  </div>
+  <p>claude-auto is an independent open-source project and is not affiliated with or endorsed by Anthropic. Claude and Claude Code are trademarks of Anthropic.</p>
+</footer>
+<script>
+document.getElementById('copy').addEventListener('click', function () {
+  var b = this;
+  navigator.clipboard.writeText(document.getElementById('cmd').textContent).then(function () {
+    b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+  });
+});
+</script>
+</body>
+</html>

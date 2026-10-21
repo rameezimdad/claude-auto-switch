@@ -1,0 +1,21 @@
+# claude-auto (Claude Code Auto Account Switch)
+
+> claude-auto is a free, open-source (MIT) command-line tool for Claude Code. When the current Claude account reaches its 5-hour or weekly usage limit, it checks the real usage of your other Claude accounts, resumes the same Claude Code session on the first account with usage left, and continues from the next unfinished step instead of starting over. Works on Linux, Windows (WSL) and macOS with any number of Claude Pro, Max or Team subscriptions.
+
+Author: Mohammad Rameez Imdad (Rameez Scripts), https://rameezscripts.com
+
+## Facts
+- Install: `curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash`
+- Add accounts: `claude-auto add` (once per extra subscription, then `/login`)
+- Run: `claude-auto` instead of `claude`; every Claude Code flag passes through
+- Status: `claude-auto status` shows % used and reset time per account
+- Switch rule: account at 95% or more of its limit (env `CLAUDE_AUTO_MAX`)
+- Mechanism: official Claude Code `StopFailure` hook (matcher `rate_limit`) + a bash wrapper using `claude --resume <session id>`; Claude Code is not modified
+- Carries: session transcript, edit checkpoints, todos, plans, pasted images, flags such as `-p` and `--model`
+- All accounts full: waits for the earliest reset, then continues
+- Not affiliated with Anthropic
+
+## Links
+- [GitHub repository](https://github.com/rameezimdad/claude-auto-switch): source, README, install script
+- [Website](https://rameezimdad.github.io/claude-auto-switch/): overview, how it works, FAQ
+- [README](https://github.com/rameezimdad/claude-auto-switch/blob/main/README.md): full documentation

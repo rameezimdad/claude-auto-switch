@@ -24,10 +24,33 @@ YouTube: https://www.youtube.com/@rameezimdad (Subscribe for more!)
   <a href="#how-it-works">How it works</a> &middot;
   <a href="#commands">Commands</a> &middot;
   <a href="#faq">FAQ</a> &middot;
-  <a href="#other-languages">Other languages</a>
+  <a href="#other-languages">Other languages</a> &middot;
+  <a href="https://rameezimdad.github.io/claude-auto-switch/">Website</a>
 </p>
 
 ---
+
+## What is claude-auto?
+
+> **claude-auto is a free, open-source command-line tool for Claude Code that switches to your next Claude account when the current one reaches its usage limit.** It checks the real 5-hour and weekly usage of every account, resumes the same session on the first account with usage left, and continues from the next unfinished step instead of starting over. It works on Linux, Windows (WSL) and macOS with any number of Claude Pro, Max or Team subscriptions.
+
+| | |
+|---|---|
+| **Price** | Free, MIT license |
+| **Switches when** | An account reaches 95% of its 5-hour or weekly limit (configurable) |
+| **Keeps** | Same session, full context, edit checkpoints, todos, plans, your flags |
+| **Accounts** | Unlimited (`claude-auto add` for each one) |
+| **Install** | One command, under 5 minutes |
+| **Website** | [rameezimdad.github.io/claude-auto-switch](https://rameezimdad.github.io/claude-auto-switch/) |
+
+## What can you do when the Claude usage limit is reached?
+
+| Option | Keeps working now | Keeps the same session | Extra cost |
+|---|---|---|---|
+| Wait for the reset | No, up to 5 hours or until the weekly reset | Yes | None |
+| Open another account by hand | Yes | Only if you find and resume it yourself | Another subscription |
+| Switch to an API key | Yes | Yes | Pay per token |
+| **claude-auto** | **Yes, automatic** | **Yes, continues the next step** | Only subscriptions you already have |
 
 ## The problem
 
