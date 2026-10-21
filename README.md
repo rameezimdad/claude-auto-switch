@@ -4,10 +4,6 @@ WhatsApp: https://wa.me/923435347417 (For Custom Projects)
 YouTube: https://www.youtube.com/@rameezimdad (Subscribe for more!)
 -->
 
-<p align="center">
-  <img src="assets/banner.svg" alt="claude-auto - Claude Code auto account switcher when the usage limit is reached" width="100%">
-</p>
-
 <h1 align="center">Claude Code Usage Limit Reached? Auto Switch to Your Next Claude Account</h1>
 
 <p align="center">
