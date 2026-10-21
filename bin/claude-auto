@@ -100,6 +100,15 @@ export CLAUDE_AUTO_FLAG="${TMPDIR:-/tmp}/claude-auto.$$"
 trap 'rm -f "$CLAUDE_AUTO_FLAG"' EXIT
 
 cur="${CLAUDE_CONFIG_DIR:-}"; args=("$@")
+# flags carried over to the resumed session (prompt / resume flags are not)
+keep=(); a=("$@")
+for ((i = 0; i < ${#a[@]}; i++)); do
+  case "${a[i]}" in
+    -p|--print|--verbose|--dangerously-skip-permissions|--ide) keep+=("${a[i]}") ;;
+    --model|--permission-mode|--output-format|--add-dir|--settings|--agent) keep+=("${a[i]}" "${a[i+1]}"); ((i++)) ;;
+    --model=*|--permission-mode=*|--output-format=*|--add-dir=*|--settings=*|--agent=*) keep+=("${a[i]}") ;;
+  esac
+done
 if [ -z "$cur" ]; then echo "claude-auto: checking accounts..." >&2; pick ""; cur=$PICK; fi
 while :; do
   if [ -z "$cur" ]; then
@@ -118,5 +127,5 @@ while :; do
   echo -e "\nclaude-auto: $(name "$cur") hit its usage limit. Switching..." >&2
   pick "$cur"; cur=$PICK
   [ -n "$cur" ] && carry "$prev" "$cur" "$sid"
-  args=(--resume "$sid" "The previous account hit its usage limit and this session moved to another account. Continue the task exactly where you left off.")
+  args=("${keep[@]}" --resume "$sid" "The previous account hit its usage limit and this session moved to another account. Continue the task exactly where you left off.")
 done
