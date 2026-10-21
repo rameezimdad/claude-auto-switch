@@ -30,7 +30,9 @@ cmd_status() {
 
 cmd_add() {
   local n=$1 dir f
-  [[ "$n" =~ ^[0-9]+$ ]] || { echo "usage: claude-auto add <number>   e.g. claude-auto add 2" >&2; exit 1; }
+  # no number -> next free one (2, 3, 4 ...)
+  if [ -z "$n" ]; then n=2; while [ -e "$HOME/.claude-$n" ] || grep -qxF "$HOME/.claude-$n" "$CONF" 2>/dev/null; do n=$((n + 1)); done; fi
+  [[ "$n" =~ ^[0-9]+$ ]] && [ "$n" -ge 2 ] || { echo "usage: claude-auto add [number]   e.g. claude-auto add 4" >&2; exit 1; }
   dir="$HOME/.claude-$n"
   mkdir -p "$dir" "$MAIN"
   # share history, settings, skills with the main account so a session can move
@@ -42,8 +44,32 @@ cmd_add() {
   done
   mkdir -p "$(dirname "$CONF")"; touch "$CONF"
   grep -qxF "$dir" "$CONF" || echo "$dir" >> "$CONF"
-  echo "Account folder ready: $dir"
-  echo "Log it in once:  CLAUDE_CONFIG_DIR=$dir claude   then type /login"
+  echo "Account $n ready: $dir"
+  [ -n "$CLAUDE_AUTO_NOLOGIN" ] && return
+  if [ -t 0 ]; then
+    read -rp "Log in to account $n now? [Y/n] " yn
+    [[ "$yn" =~ ^[Nn] ]] || { cmd_login "$n"; return; }
+  fi
+  echo "Log it in later:  claude-auto login $n"
+}
+
+# open claude on one account to run /login
+cmd_login() {
+  local n=$1 dir
+  [[ "$n" =~ ^[0-9]+$ ]] || { echo "usage: claude-auto login <number>   (1 = ~/.claude)" >&2; exit 1; }
+  [ "$n" = 1 ] && dir=$MAIN || dir="$HOME/.claude-$n"
+  [ -d "$dir" ] || { echo "No account $n yet. Run: claude-auto add $n" >&2; exit 1; }
+  echo "Type /login, sign in with the Claude account for slot $n, then type /exit."
+  if [ "$dir" = "$MAIN" ]; then env -u CLAUDE_CONFIG_DIR claude; else env CLAUDE_CONFIG_DIR="$dir" claude; fi
+}
+
+# take an account out of the rotation (folder + login are kept)
+cmd_remove() {
+  local n=$1 dir
+  [[ "$n" =~ ^[0-9]+$ ]] && [ "$n" -ge 2 ] || { echo "usage: claude-auto remove <number>" >&2; exit 1; }
+  dir="$HOME/.claude-$n"
+  [ -f "$CONF" ] && grep -vxF "$dir" "$CONF" > "$CONF.tmp" && mv "$CONF.tmp" "$CONF"
+  echo "Account $n removed from rotation. Folder kept: $dir"
 }
 
 # first account with room, skipping $1. sets PICK and WAIT_UNTIL (epoch)
@@ -81,19 +107,25 @@ carry() {
 
 run() {
   # default dir runs without CLAUDE_CONFIG_DIR so its login (keychain on macOS) stays the same
-  if [ "$1" = "$MAIN" ]; then (unset CLAUDE_CONFIG_DIR; shift; claude "$@")
-  else local d=$1; shift; CLAUDE_CONFIG_DIR="$d" claude "$@"; fi
+  # env execs claude, so claude stays a direct child of this script (the hook looks for that)
+  local d=$1; shift
+  if [ "$d" = "$MAIN" ]; then env -u CLAUDE_CONFIG_DIR claude "$@"
+  else env CLAUDE_CONFIG_DIR="$d" claude "$@"; fi
 }
 
 case "$1" in
   status) cmd_status; exit ;;
   add) cmd_add "$2"; exit ;;
+  login) cmd_login "$2"; exit ;;
+  remove) cmd_remove "$2"; exit ;;
   accounts) accts; exit ;;
   help|-h|--help)
     cat <<EOF
 claude-auto [claude args]   start Claude Code; switches account when usage runs out
 claude-auto status          usage of every account
-claude-auto add <n>         make ~/.claude-<n> as a new account (shares history + settings)
+claude-auto add [n]         add another Claude subscription (next free slot if n is left out)
+claude-auto login <n>       log in (or switch login) on account n  (1 = ~/.claude)
+claude-auto remove <n>      take account n out of the rotation
 claude-auto accounts        list accounts ($CONF)
 Env: CLAUDE_AUTO_MAX=95  switch when an account reaches this % used
 EOF

@@ -80,16 +80,23 @@ Claude Code reopens **the same conversation** on account 2 and continues the tas
 curl -fsSL https://raw.githubusercontent.com/rameezimdad/claude-auto-switch/main/install.sh | bash
 ```
 
-**2. Add your other Claude accounts**
+**2. Add your other Claude subscriptions**
 
-Your normal Claude Code login (`~/.claude`) is account 1.
+Your normal Claude Code login (`~/.claude`) is account 1. Add every extra subscription with one command:
 
 ```bash
-claude-auto add 2
-CLAUDE_CONFIG_DIR=~/.claude-2 claude     # type /login, sign in with account 2, then /exit
+claude-auto add
+```
 
-claude-auto add 3
-CLAUDE_CONFIG_DIR=~/.claude-3 claude     # /login with account 3
+It creates the next free slot (`~/.claude-2`, then `~/.claude-3` ...), asks *"Log in to account 2 now?"*, and opens Claude Code there. Type `/login`, sign in with that subscription, then `/exit`.
+
+Run it again for each subscription you own:
+
+```bash
+claude-auto add      # account 2
+claude-auto add      # account 3
+claude-auto add      # account 4
+claude-auto add      # account 5, and so on, no limit
 ```
 
 **3. Work as usual**
@@ -101,6 +108,19 @@ claude-auto
 Every Claude Code flag works the same way, for example `claude-auto -c`, `claude-auto --resume <id>` or `claude-auto -p "..."`.
 
 > Tip: add `alias claude=claude-auto` to your `~/.bashrc` or `~/.zshrc` so every session is protected.
+
+## Managing your Claude subscriptions
+
+| I want to... | Run |
+|---|---|
+| Add one more subscription | `claude-auto add` |
+| Add account 4 / 5 / 6 by number | `claude-auto add 4` |
+| See all accounts and their usage | `claude-auto status` |
+| Log in again (token expired, new plan) | `claude-auto login 3` |
+| Stop using one account | `claude-auto remove 3` |
+| Change the order accounts are tried | Edit `~/.config/claude-auto/accounts`, one folder per line, top is tried first |
+
+Every account you add shares the same conversation history, settings, skills, plugins, slash commands and `CLAUDE.md` as account 1. Only the login is separate, so a session can move to any of them and carry on.
 
 ## How it works
 
@@ -130,7 +150,10 @@ Accounts that are not logged in are skipped. If an account's token has expired, 
 |---|---|
 | `claude-auto` | Start Claude Code with auto switching (all `claude` flags pass through) |
 | `claude-auto status` | Usage % and reset time of every account |
-| `claude-auto add <n>` | Create `~/.claude-<n>` as a new account that shares your history and settings |
+| `claude-auto add` | Add the next Claude subscription (account 2, 3, 4 ...) and log it in |
+| `claude-auto add <n>` | Add a specific slot, for example `claude-auto add 7` |
+| `claude-auto login <n>` | Log in again or change the subscription on account `n` (`1` = `~/.claude`) |
+| `claude-auto remove <n>` | Take account `n` out of the rotation (folder and login are kept) |
 | `claude-auto accounts` | List accounts in the order they are tried |
 | `claude-auto help` | Show help |
 
@@ -164,10 +187,10 @@ account 1 (~/.claude)             97% used, resets Thu 17:00
 | Problem | Fix |
 |---|---|
 | `claude-auto: command not found` | Add `export PATH="$HOME/.local/bin:$PATH"` to your shell profile |
-| An account shows `not logged in` | Run `CLAUDE_CONFIG_DIR=~/.claude-<n> claude`, then `/login` |
+| An account shows `not logged in` | Run `claude-auto login <n>`, then `/login` |
 | An account shows `usage unknown` | The token expired or you are offline. It is still tried, and Claude Code refreshes the token on start. |
 | No switch happened | Start with `claude-auto`, not `claude`. The hook only acts on sessions started by `claude-auto`. |
-| The new account has no history | Create account folders with `claude-auto add <n>` so `projects/` is shared. Otherwise the session is copied over. |
+| The new account has no history | Create account folders with `claude-auto add` so `projects/` is shared. Otherwise the session is copied over. |
 
 ## Uninstall
 
@@ -188,13 +211,19 @@ Normally you wait for the reset, which can take up to 5 hours for the session wi
 <details>
 <summary><b>How do I use Claude after reaching the limit?</b></summary>
 
-Install claude-auto, add a second Claude account with `claude-auto add 2`, and start Claude Code with `claude-auto`. When the limit is reached, it switches for you.
+Install claude-auto, add a second Claude account with `claude-auto add`, and start Claude Code with `claude-auto`. When the limit is reached, it switches for you.
 </details>
 
 <details>
 <summary><b>How do I use multiple Claude accounts in Claude Code?</b></summary>
 
-Each account needs its own config folder (`CLAUDE_CONFIG_DIR`). `claude-auto add <n>` creates one that shares your history and settings, and `claude-auto` picks the account with usage left.
+Run `claude-auto add` once for each extra subscription and log in when it asks. Each account gets its own config folder (`CLAUDE_CONFIG_DIR`) that shares your history and settings, and `claude-auto` picks the account with usage left.
+</details>
+
+<details>
+<summary><b>How many Claude accounts can I add?</b></summary>
+
+There is no limit. Run `claude-auto add` for account 4, 5, 6 and so on. They are tried in order, top to bottom.
 </details>
 
 <details>

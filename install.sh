@@ -58,6 +58,6 @@ case ":$PATH:" in *":$BIN:"*) ;; *) echo "Add to your shell profile:  export PAT
 echo "Accounts file: $CONF"
 echo
 echo "Next:"
-echo "  claude-auto add 2      # make a second account folder, then log it in"
+echo "  claude-auto add        # add your next Claude subscription (2, 3, 4 ...)"
 echo "  claude-auto status     # usage of every account"
 echo "  claude-auto            # start Claude Code with auto switching"
